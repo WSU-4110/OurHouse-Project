@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import "./App.css";
 
 const API = 'http://localhost:3000';
 
@@ -17,6 +18,38 @@ export default function App() {
 
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState('');
+
+
+
+
+//CSV Export Button
+const handleExport = async () => {
+  try {
+    const res = await fetch("http://localhost:3000/export/csv", {
+      method: "GET",
+      credentials: "include", // keep if you use cookies for auth
+    });
+
+    if (!res.ok) throw new Error("Failed to download");
+
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "inventory.csv";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  } catch (err) {
+    console.error(err);
+    alert("Export failed");
+  }
+};
+
+
+
+
 
   useEffect(() => {
     (async () => {
@@ -89,7 +122,24 @@ export default function App() {
 
   return (
     <div style={{ maxWidth: 1000, margin: '40px auto', fontFamily: 'system-ui, sans-serif', color: '#eee' }}>
-      <h1>OurHouse — Inventory</h1>
+      
+      {/* Top row: heading on left, export button on right */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+        <h1>OurHouse — Inventory</h1>
+        <button
+          onClick={handleExport}
+          style={{
+            background: '#16a34a',
+            color: '#fff',
+            padding: '8px 16px',
+            border: 'none',
+            borderRadius: '6px',
+            cursor: 'pointer'
+          }}
+        >
+          Export CSV
+        </button>
+      </div>
 
       {!!err && (
         <div style={{ background:'#512', padding:10, margin:'10px 0', border:'1px solid #a55' }}>
