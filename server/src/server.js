@@ -185,25 +185,40 @@ app.post('/transactions/transfer', handle(async (req, res) => {
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`API listening on http://localhost:${port}`));
 
-//EXPORT TO CSV
+
+// EXPORT TO CSV
 // Temporary middleware until we have real auth
 function requireInventoryManager(req, res, next) {
-  // For now, allow all requests through
-  // Later replace with: if (req.user?.role === "InventoryManager") { ... }
-  return next();
+    // For now, allow all requests through
+    // Later replace with: if (req.user?.role === "InventoryManager") { ... }
+    return next();
 }
 
 app.get("/export/csv", requireInventoryManager, async (req, res) => {
-  try {
-    const result = await pool.query("SELECT * FROM inventory ORDER BY id");
-    const parser = new Parser();
-    const csv = parser.parse(result.rows);
+    try {
+        const result = await pool.query(`
+      SELECT 
+        l.name AS location,
+        p.name AS product,
+        b.code AS bin,
+        s.qty AS quantity
+      FROM stock_levels s
+      JOIN products p ON s.product_id = p.id
+      JOIN bins b ON s.bin_id = b.id
+      JOIN locations l ON b.location_id = l.id
+      ORDER BY l.name, p.name, b.code
+    `);
 
-    res.header("Content-Type", "text/csv");
-    res.attachment("inventory.csv");
-    return res.send(csv);
-  } catch (err) {
-    console.error("CSV export failed:", err);
-    res.status(500).json({ error: "Failed to export CSV" });
-  }
+        const parser = new Parser();
+        const csv = parser.parse(result.rows);
+
+        res.header("Content-Type", "text/csv");
+        res.attachment("inventory.csv");
+        return res.send(csv);
+    } catch (err) {
+        console.error("CSV export failed:", err.message);
+        console.error(err.stack);
+        res.status(500).json({ error: "Failed to export CSV" });
+    }
 });
+
