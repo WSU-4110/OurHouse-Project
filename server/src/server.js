@@ -4,6 +4,11 @@ const cors = require('cors');
 const { Pool } = require('pg');
 require('dotenv').config();
 
+const { MovementService } = require('./services/MovementService');
+const { ReceiveCommand }  = require('./commands/ReceiveCommand');
+const { ShipCommand }     = require('./commands/ShipCommand');
+const { TransferCommand } = require('./commands/TransferCommand');
+
 const app = express();
 app.use(express.json());
 
@@ -16,7 +21,7 @@ const pool = new Pool({
   port: Number(process.env.PGPORT || 5432),
   user: process.env.PGUSER || 'postgres',
   password: String(process.env.PGPASSWORD ?? ''),
-  database: process.env.PGDATABASE || 'warehouse',
+  database: process.env.PGDATABASE || 'OurHouse',
   ssl: (/require/i).test(process.env.PGSSLMODE || '') ? { rejectUnauthorized: false } : false,
 });
 
@@ -24,9 +29,9 @@ const pool = new Pool({
 (async () => {
   try {
     const { rows } = await pool.query('select now() as now');
-    console.log('✅ DB connected at', rows[0].now);
+    console.log('DB connected at', rows[0].now);
   } catch (err) {
-    console.error('❌ Could not connect to Postgres. Check server/.env values.', err.message);
+    console.error('Could not connect to Postgres. Check server/.env values.', err.message);
     console.error('   PGHOST/PGPORT/PGUSER/PGPASSWORD/PGDATABASE must be correct.');
   }
 })();
@@ -77,109 +82,27 @@ async function getQty(client, productId, binId) {
   return rows[0]?.qty ? Number(rows[0].qty) : 0;
 }
 
-// receive
+const svc = new MovementService(); // uses InventoryRepository internally
+
 app.post('/transactions/receive', handle(async (req, res) => {
-  const { productId, binId, qty, reference, user } = req.body;
-  if (!productId || !binId || !qty || qty <= 0) {
-    return res.status(400).json({ error: 'productId, binId, positive qty required' });
-  }
-  const client = await pool.connect();
-  try {
-    await client.query('begin');
-    await client.query(
-      `insert into stock_levels(product_id, bin_id, qty)
-       values ($1,$2,$3)
-       on conflict (product_id,bin_id) do update set qty=stock_levels.qty+excluded.qty`,
-      [productId, binId, qty]
-    );
-    await client.query(
-      `insert into stock_transactions(type, product_id, to_bin_id, qty, reference, performed_by)
-       values ('IN',$1,$2,$3,$4,$5)`,
-      [productId, binId, qty, reference || null, user || 'api']
-    );
-    await client.query('commit');
-    res.json({ ok: true });
-  } catch (e) {
-    await client.query('rollback');
-    throw e;
-  } finally {
-    client.release();
-  }
+  // expected body: { productId, binId, qty, reference?, user? }
+  const result = await svc.run(new ReceiveCommand(req.body));
+  res.json(result); // { ok: true }
 }));
 
-// ship
 app.post('/transactions/ship', handle(async (req, res) => {
-  const { productId, binId, qty, reference, user } = req.body;
-  if (!productId || !binId || !qty || qty <= 0) {
-    return res.status(400).json({ error: 'productId, binId, positive qty required' });
-  }
-  const client = await pool.connect();
-  try {
-    await client.query('begin');
-    const available = await getQty(client, productId, binId);
-    if (available < qty) {
-      await client.query('rollback');
-      return res.status(400).json({ error: `Only ${available} available` });
-    }
-    await client.query(
-      `update stock_levels set qty = qty - $3
-       where product_id=$1 and bin_id=$2`,
-      [productId, binId, qty]
-    );
-    await client.query(
-      `insert into stock_transactions(type, product_id, from_bin_id, qty, reference, performed_by)
-       values ('OUT',$1,$2,$3,$4,$5)`,
-      [productId, binId, qty, reference || null, user || 'api']
-    );
-    await client.query('commit');
-    res.json({ ok: true });
-  } catch (e) {
-    await client.query('rollback');
-    throw e;
-  } finally {
-    client.release();
-  }
+  // expected body: { productId, binId, qty, reference?, user? }
+  const result = await svc.run(new ShipCommand(req.body));
+  res.json(result);
 }));
 
-// transfer
 app.post('/transactions/transfer', handle(async (req, res) => {
-  const { productId, fromBinId, toBinId, qty, reference, user } = req.body;
-  if (!productId || !fromBinId || !toBinId || fromBinId === toBinId || !qty || qty <= 0) {
-    return res.status(400).json({ error: 'productId, fromBinId!=toBinId, positive qty required' });
-  }
-  const client = await pool.connect();
-  try {
-    await client.query('begin');
-    const available = await getQty(client, productId, fromBinId);
-    if (available < qty) {
-      await client.query('rollback');
-      return res.status(400).json({ error: `Only ${available} available in source bin` });
-    }
-    await client.query(
-      `update stock_levels set qty = qty - $3
-       where product_id=$1 and bin_id=$2`,
-      [productId, fromBinId, qty]
-    );
-    await client.query(
-      `insert into stock_levels(product_id, bin_id, qty)
-       values ($1,$2,$3)
-       on conflict (product_id,bin_id) do update set qty=stock_levels.qty+excluded.qty`,
-      [productId, toBinId, qty]
-    );
-    await client.query(
-      `insert into stock_transactions(type, product_id, from_bin_id, to_bin_id, qty, reference, performed_by)
-       values ('MOVE',$1,$2,$3,$4,$5,$6)`,
-      [productId, fromBinId, toBinId, qty, reference || null, user || 'api']
-    );
-    await client.query('commit');
-    res.json({ ok: true });
-  } catch (e) {
-    await client.query('rollback');
-    throw e;
-  } finally {
-    client.release();
-  }
+  // expected body: { productId, fromBinId, toBinId, qty, reference?, user? }
+  const result = await svc.run(new TransferCommand(req.body));
+  res.json(result);
 }));
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`API listening on http://localhost:${port}`));
+const port = Number(process.env.PORT || 3000);
+app.listen(port, () => {
+  console.log(`API listening on http://localhost:${port}`);
+});
