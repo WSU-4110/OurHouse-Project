@@ -222,7 +222,7 @@ app.get("/export/csv", requireInventoryManager, async (req, res) => {
     }
 });
 
-// --- IMPORT CSV ROUTE ---
+// --- IMPORT CSV ---
 const multer = require("multer");
 const fs = require("fs");
 const csv = require("csv-parser");
@@ -339,6 +339,7 @@ app.post("/import/csv", upload.single("file"), async (req, res) => {
     fs.unlinkSync(filePath);
   }
 });
+
 
 
 
