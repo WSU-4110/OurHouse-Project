@@ -47,6 +47,32 @@ const handleExport = async () => {
   }
 };
 
+// CSV Import Button
+const handleImport = async (e) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append("file", file);
+
+  try {
+    const res = await fetch("http://localhost:3000/import/csv", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!res.ok) throw new Error("Import failed");
+    const data = await res.json();
+    alert(`✅ Imported ${data.imported} records successfully`);
+    await reloadStock();
+  } catch (err) {
+    console.error(err);
+    alert("❌ Import failed — check console for details");
+  } finally {
+    e.target.value = null; // reset input for next upload
+  }
+};
+
 
 
 
@@ -126,19 +152,46 @@ const handleExport = async () => {
       {/* Top row: heading on left, export button on right */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
         <h1>OurHouse — Inventory</h1>
-        <button
-          onClick={handleExport}
-          style={{
-            background: '#16a34a',
-            color: '#fff',
-            padding: '8px 16px',
-            border: 'none',
-            borderRadius: '6px',
-            cursor: 'pointer'
-          }}
-        >
-          Export CSV
-        </button>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          {/* Export CSV */}
+          <button
+            onClick={handleExport}
+            style={{
+              background: '#16a34a',
+              color: '#fff',
+              padding: '8px 16px',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: 'pointer'
+            }}
+          >
+            Export CSV
+          </button>
+
+          {/* Import CSV */}
+          <label
+            style={{
+              background: '#16a34a',      // same green color as Export
+              color: '#fff',
+              padding: '8px 16px',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontSize: '1em',
+              fontWeight: 500,
+              display: 'flex',
+              alignItems: 'center'
+            }}
+          >
+            Import CSV
+            <input
+              type="file"
+              accept=".csv"
+              style={{ display: 'none' }}
+              onChange={handleImport}
+            />
+          </label>
+        </div>
+
       </div>
 
       {!!err && (
