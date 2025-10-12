@@ -222,6 +222,125 @@ app.get("/export/csv", requireInventoryManager, async (req, res) => {
     }
 });
 
+// --- IMPORT CSV ---
+const multer = require("multer");
+const fs = require("fs");
+const csv = require("csv-parser");
+
+// Temporary file storage
+const upload = multer({ dest: "uploads/" });
+
+app.post("/import/csv", upload.single("file"), async (req, res) => {
+  if (!req.file) return res.status(400).json({ error: "No file uploaded" });
+
+  const filePath = req.file.path;
+  const client = await pool.connect();
+
+  try {
+    const rows = [];
+    await new Promise((resolve, reject) => {
+      fs.createReadStream(filePath)
+        .pipe(csv())
+        .on("data", (data) => rows.push(data))
+        .on("end", resolve)
+        .on("error", reject);
+    });
+
+    await client.query("BEGIN");
+
+    for (const row of rows) {
+      const { location, product, bin, quantity } = row;
+
+      // ---------- LOCATION ----------
+      let locRes = await client.query(
+        "SELECT id FROM locations WHERE name = $1",
+        [location]
+      );
+      let locationId;
+      if (locRes.rows.length === 0) {
+        const insertLoc = await client.query(
+          "INSERT INTO locations(name) VALUES ($1) RETURNING id",
+          [location]
+        );
+        locationId = insertLoc.rows[0].id;
+      } else {
+        locationId = locRes.rows[0].id;
+      }
+
+      // ---------- BIN ----------
+      let binRes = await client.query(
+        "SELECT id FROM bins WHERE location_id = $1 AND code = $2",
+        [locationId, bin]
+      );
+      let binId;
+      if (binRes.rows.length === 0) {
+        const insertBin = await client.query(
+          "INSERT INTO bins(location_id, code) VALUES ($1, $2) RETURNING id",
+          [locationId, bin]
+        );
+        binId = insertBin.rows[0].id;
+      } else {
+        binId = binRes.rows[0].id;
+      }
+
+      // ---------- PRODUCT ----------
+      let prodRes = await client.query(
+        "SELECT id FROM products WHERE name = $1",
+        [product]
+      );
+      let productId;
+      if (prodRes.rows.length === 0) {
+        const insertProd = await client.query(
+          "INSERT INTO products(name) VALUES ($1) RETURNING id",
+          [product]
+        );
+        productId = insertProd.rows[0].id;
+      } else {
+        productId = prodRes.rows[0].id;
+      }
+
+      // ---------- STOCK ----------
+      // Add to existing quantity (not replace)
+      let stockRes = await client.query(
+        "SELECT qty FROM stock_levels WHERE product_id = $1 AND bin_id = $2",
+        [productId, binId]
+      );
+
+      if (stockRes.rows.length === 0) {
+        await client.query(
+          "INSERT INTO stock_levels(product_id, bin_id, qty) VALUES ($1, $2, $3)",
+          [productId, binId, quantity]
+        );
+      } else {
+        const newQty =
+          Number(stockRes.rows[0].qty) + Number(quantity);
+        await client.query(
+          "UPDATE stock_levels SET qty = $3 WHERE product_id = $1 AND bin_id = $2",
+          [productId, binId, newQty]
+        );
+      }
+
+      // ---------- TRANSACTION ----------
+      await client.query(
+        `INSERT INTO stock_transactions(type, product_id, to_bin_id, qty, reference, performed_by)
+         VALUES ('IN', $1, $2, $3, $4, $5)`,
+        [productId, binId, quantity, "CSV Import (Shipment Received)", "system"]
+      );
+    }
+
+    await client.query("COMMIT");
+    res.json({ ok: true, imported: rows.length });
+  } catch (err) {
+    await client.query("ROLLBACK");
+    console.error("Import failed:", err);
+    res.status(500).json({ error: "CSV import failed" });
+  } finally {
+    client.release();
+    fs.unlinkSync(filePath);
+  }
+});
+
+
 
 
 
