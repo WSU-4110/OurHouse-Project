@@ -4,14 +4,15 @@ const cors = require('cors');
 const { Pool } = require('pg');
 const { Parser } = require('json2csv');
 require('dotenv').config();
+const {authRequired, roleRequired} = require('./auth');
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
-app.use(express.json());
-
 const corsOrigin = process.env.CORS_ORIGIN || 'http://localhost:5173';
 app.use(cors({ origin: corsOrigin, credentials: true }));
+app.use(express.json());
+app.use('/auth', authRoutes);
 
-// Build a safe config (no connection string parsing)
 const pool = new Pool({
   host: process.env.PGHOST || 'localhost',
   port: Number(process.env.PGPORT || 5432),
@@ -79,7 +80,7 @@ async function getQty(client, productId, binId) {
 }
 
 // receive
-app.post('/transactions/receive', handle(async (req, res) => {
+app.post('/transactions/receive', authRequired, roleRequired('Worker', 'Manager', 'Admin'), handle(async (req, res) => {
   const { productId, binId, qty, reference, user } = req.body;
   if (!productId || !binId || !qty || qty <= 0) {
     return res.status(400).json({ error: 'productId, binId, positive qty required' });
@@ -109,7 +110,7 @@ app.post('/transactions/receive', handle(async (req, res) => {
 }));
 
 // ship
-app.post('/transactions/ship', handle(async (req, res) => {
+app.post('/transactions/ship', authRequired, roleRequired('Worker', 'Manager', 'Admin'), handle(async (req, res) => {
   const { productId, binId, qty, reference, user } = req.body;
   if (!productId || !binId || !qty || qty <= 0) {
     return res.status(400).json({ error: 'productId, binId, positive qty required' });
@@ -194,7 +195,7 @@ function requireInventoryManager(req, res, next) {
     return next();
 }
 
-app.get("/export/csv", requireInventoryManager, async (req, res) => {
+app.get('/export/csv', authRequired, roleRequired('Manager', 'Admin'), async (req, res) => {
     try {
         const result = await pool.query(`
       SELECT 
@@ -230,7 +231,7 @@ const csv = require("csv-parser");
 // Temporary file storage
 const upload = multer({ dest: "uploads/" });
 
-app.post("/import/csv", upload.single("file"), async (req, res) => {
+app.post("/import/csv", authRequired, roleRequired('Manager', 'Admin'), upload.single("file"), async (req, res) => {
   if (!req.file) return res.status(400).json({ error: "No file uploaded" });
 
   const filePath = req.file.path;
