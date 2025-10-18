@@ -99,6 +99,11 @@ app.post('/transactions/receive', authRequired, roleRequired('Worker', 'Manager'
        values ('IN',$1,$2,$3,$4,$5)`,
       [productId, binId, qty, reference || null, user || 'api']
     );
+    await client.query(
+      `INSERT INTO activity_logs(action_type, user_name, user_role, details)
+      VALUES ($1, $2, $3, $4)`,
+      ['RECEIVE', user, req.user.role, JSON.stringify({ productId, binId, qty, reference })]
+    );
     await client.query('commit');
     res.json({ ok: true });
   } catch (e) {
@@ -132,6 +137,11 @@ app.post('/transactions/ship', authRequired, roleRequired('Worker', 'Manager', '
       `insert into stock_transactions(type, product_id, from_bin_id, qty, reference, performed_by)
        values ('OUT',$1,$2,$3,$4,$5)`,
       [productId, binId, qty, reference || null, user || 'api']
+    );
+    await client.query(
+      `INSERT INTO activity_logs(action_type, user_name, user_role, details)
+      VALUES ($1, $2, $3, $4)`,
+      ['MOVE', user, req.user.role, JSON.stringify({ productId, binId, qty, reference })]
     );
     await client.query('commit');
     res.json({ ok: true });
@@ -173,6 +183,11 @@ app.post('/transactions/transfer', handle(async (req, res) => {
        values ('MOVE',$1,$2,$3,$4,$5,$6)`,
       [productId, fromBinId, toBinId, qty, reference || null, user || 'api']
     );
+    await client.query(
+      `INSERT INTO activity_logs(action_type, user_name, user_role, details)
+      VALUES ($1, $2, $3, $4)`,
+      ['MOVE', user, req.user.role, JSON.stringify({ productId, binId, qty, reference })]
+    );
     await client.query('commit');
     res.json({ ok: true });
   } catch (e) {
@@ -181,6 +196,209 @@ app.post('/transactions/transfer', handle(async (req, res) => {
   } finally {
     client.release();
   }
+}));
+
+app.post('/admin/products', authRequired, roleRequired('Manager', 'Admin'), handle(async (req, res) => {
+  const { sku, name, description, unit } = req.body;
+  if (!sku || !name) {
+    return res.status(400).json({ error: 'SKU and name are required' });
+  }
+
+   const { rows } = await pool.query(
+    `INSERT INTO products (sku, name, description, unit)
+     VALUES ($1, $2, $3, $4)
+     RETURNING id, sku, name, description, unit`,
+    [sku, name, description || '', unit || 'each']
+  );
+  
+  res.json(rows[0]);
+}));
+
+app.post('/admin/locations', authRequired, roleRequired('Manager', 'Admin'), handle(async (req, res) => {
+  const { name } = req.body;
+  if (!name) {
+    return res.status(400).json({ error: 'Location name is required' });
+  }
+  
+  const { rows } = await pool.query(
+    `INSERT INTO locations (name)
+     VALUES ($1)
+     RETURNING id, name`,
+    [name]
+  );
+
+  res.json(rows[0]);
+}));
+
+app.post('/admin/bins', authRequired, roleRequired('Manager', 'Admin'), handle(async (req, res) => {
+  const { locationId, code } = req.body;
+  if (!locationId || !code) {
+    return res.status(400).json({ error: 'Location ID and bin code are required' });
+  }
+  
+  const { rows } = await pool.query(
+    `INSERT INTO bins (location_id, code)
+     VALUES ($1, $2)
+     RETURNING id, location_id, code`,
+    [locationId, code]
+  );
+  
+  res.json(rows[0]);
+}));
+
+app.delete('/admin/products/:id', authRequired, roleRequired('Manager', 'Admin'), handle(async (req, res) => {
+  const { id } = req.params;
+  const client = await pool.connect();
+  
+  try {
+    await client.query('BEGIN');
+    
+    //checks if product has stock
+    const { rows: stockCheck } = await client.query(
+      'SELECT COUNT(*) as count FROM stock_levels WHERE product_id = $1 AND qty > 0',
+      [id]
+    );
+    
+    if (Number(stockCheck[0].count) > 0) {
+      await client.query('ROLLBACK');
+      return res.status(400).json({ error: 'Cannot delete product with existing stock' });
+    }
+    
+    //gets product info to log
+    const { rows: product } = await client.query('SELECT * FROM products WHERE id = $1', [id]);
+    
+    //deletes stock
+    await client.query('DELETE FROM stock_levels WHERE product_id = $1', [id]);
+    
+    //deletes product
+    await client.query('DELETE FROM products WHERE id = $1', [id]);
+    
+    //logs action
+    await client.query(
+      `INSERT INTO activity_logs(action_type, user_name, user_role, details)
+       VALUES ($1, $2, $3, $4)`,
+      ['DELETE_PRODUCT', req.user.name, req.user.role, JSON.stringify(product[0])]
+    );
+    
+    await client.query('COMMIT');
+    res.json({ ok: true, message: 'Product deleted successfully' });
+  } catch (e) {
+    await client.query('ROLLBACK');
+    throw e;
+  } finally {
+    client.release();
+  }
+}));
+
+app.delete('/admin/locations/:id', authRequired, roleRequired('Manager', 'Admin'), handle(async (req, res) => {
+  const { id } = req.params;
+  const client = await pool.connect();
+  
+  try {
+    await client.query('BEGIN');
+    
+    //checks for location bins with stock
+    const { rows: stockCheck } = await client.query(
+      `SELECT COUNT(*) as count FROM stock_levels sl
+       JOIN bins b ON sl.bin_id = b.id
+       WHERE b.location_id = $1 AND sl.qty > 0`,
+      [id]
+    );
+    
+    if (Number(stockCheck[0].count) > 0) {
+      await client.query('ROLLBACK');
+      return res.status(400).json({ error: 'Cannot delete location with stock in bins' });
+    }
+    
+    //gets location info for logging
+    const { rows: location } = await client.query('SELECT * FROM locations WHERE id = $1', [id]);
+    
+    //deletes bin and stock 
+    await client.query(
+      'DELETE FROM stock_levels WHERE bin_id IN (SELECT id FROM bins WHERE location_id = $1)',
+      [id]
+    );
+    await client.query('DELETE FROM bins WHERE location_id = $1', [id]);
+    
+    //delete location
+    await client.query('DELETE FROM locations WHERE id = $1', [id]);
+    
+    //logs action
+    await client.query(
+      `INSERT INTO activity_logs(action_type, user_name, user_role, details)
+       VALUES ($1, $2, $3, $4)`,
+      ['DELETE_LOCATION', req.user.name, req.user.role, JSON.stringify(location[0])]
+    );
+    
+    await client.query('COMMIT');
+    res.json({ ok: true, message: 'Location deleted successfully' });
+  } catch (e) {
+    await client.query('ROLLBACK');
+    throw e;
+  } finally {
+    client.release();
+  }
+}));
+
+app.delete('/admin/bins/:id', authRequired, roleRequired('Manager', 'Admin'), handle(async (req, res) => {
+  const { id } = req.params;
+  const client = await pool.connect();
+  
+  try {
+    await client.query('BEGIN');
+    
+    //checks for stock in bin
+    const { rows: stockCheck } = await client.query(
+      'SELECT COUNT(*) as count FROM stock_levels WHERE bin_id = $1 AND qty > 0',
+      [id]
+    );
+    
+    if (Number(stockCheck[0].count) > 0) {
+      await client.query('ROLLBACK');
+      return res.status(400).json({ error: 'Cannot delete bin with existing stock' });
+    }
+    
+    //bin info for logging
+    const { rows: bin } = await client.query(
+      'SELECT b.*, l.name as location_name FROM bins b JOIN locations l ON b.location_id = l.id WHERE b.id = $1',
+      [id]
+    );
+    
+    //delete stock
+    await client.query('DELETE FROM stock_levels WHERE bin_id = $1', [id]);
+    
+    //delete bin
+    await client.query('DELETE FROM bins WHERE id = $1', [id]);
+    
+    //log action
+    await client.query(
+      `INSERT INTO activity_logs(action_type, user_name, user_role, details)
+       VALUES ($1, $2, $3, $4)`,
+      ['DELETE_BIN', req.user.name, req.user.role, JSON.stringify(bin[0])]
+    );
+    
+    await client.query('COMMIT');
+    res.json({ ok: true, message: 'Bin deleted successfully' });
+  } catch (e) {
+    await client.query('ROLLBACK');
+    throw e;
+  } finally {
+    client.release();
+  }
+}));
+
+//activity logs
+app.get('/admin/logs', authRequired, roleRequired('Manager', 'Admin'), handle(async (req, res) => {
+  const { limit = 100, offset = 0 } = req.query;
+  
+  const { rows } = await pool.query(
+    `SELECT * FROM activity_logs 
+     ORDER BY timestamp DESC 
+     LIMIT $1 OFFSET $2`,
+    [limit, offset]
+  );
+  
+  res.json(rows);
 }));
 
 const port = process.env.PORT || 3000;
@@ -252,7 +470,7 @@ app.post("/import/csv", authRequired, roleRequired('Manager', 'Admin'), upload.s
     for (const row of rows) {
       const { location, product, bin, quantity } = row;
 
-      // ---------- LOCATION ----------
+      //location
       let locRes = await client.query(
         "SELECT id FROM locations WHERE name = $1",
         [location]
@@ -268,7 +486,7 @@ app.post("/import/csv", authRequired, roleRequired('Manager', 'Admin'), upload.s
         locationId = locRes.rows[0].id;
       }
 
-      // ---------- BIN ----------
+      //bin
       let binRes = await client.query(
         "SELECT id FROM bins WHERE location_id = $1 AND code = $2",
         [locationId, bin]
@@ -284,7 +502,7 @@ app.post("/import/csv", authRequired, roleRequired('Manager', 'Admin'), upload.s
         binId = binRes.rows[0].id;
       }
 
-      // ---------- PRODUCT ----------
+      //product 
       let prodRes = await client.query(
         "SELECT id FROM products WHERE name = $1",
         [product]
@@ -300,7 +518,7 @@ app.post("/import/csv", authRequired, roleRequired('Manager', 'Admin'), upload.s
         productId = prodRes.rows[0].id;
       }
 
-      // ---------- STOCK ----------
+      //stock 
       // Add to existing quantity (not replace)
       let stockRes = await client.query(
         "SELECT qty FROM stock_levels WHERE product_id = $1 AND bin_id = $2",
@@ -321,7 +539,7 @@ app.post("/import/csv", authRequired, roleRequired('Manager', 'Admin'), upload.s
         );
       }
 
-      // ---------- TRANSACTION ----------
+      // transactions
       await client.query(
         `INSERT INTO stock_transactions(type, product_id, to_bin_id, qty, reference, performed_by)
          VALUES ('IN', $1, $2, $3, $4, $5)`,
