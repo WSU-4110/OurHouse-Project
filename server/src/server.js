@@ -141,7 +141,7 @@ app.post('/transactions/ship', authRequired, roleRequired('Worker', 'Manager', '
     await client.query(
       `INSERT INTO activity_logs(action_type, user_name, user_role, details)
       VALUES ($1, $2, $3, $4)`,
-      ['MOVE', user, req.user.role, JSON.stringify({ productId, binId, qty, reference })]
+      ['SHIP', user, req.user.role, JSON.stringify({ productId, binId, qty, reference })]
     );
     await client.query('commit');
     res.json({ ok: true });

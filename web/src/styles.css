@@ -1,18 +1,18 @@
-/* ---- OurHouse inventory polish ---- */
+/* OurHouse inventory polish */
 :root{
-  --bg-1:#0b0f14;     /* page */
-  --bg-2:#121820;     /* cards */
-  --bg-3:#1b2430;     /* hovers/rows */
-  --text-1:#e6e9ef;   /* primary text */
-  --text-2:#9aa3af;   /* secondary text */
-  --border:#2a3340;
-  --accent:#22d3ee;   /* cyan */
-  --accent-2:#8b5cf6; /* violet (subtle) */
-  --danger:#ef4444;
-  --ok:#10b981;
-  --radius:14px;
-  --shadow:0 10px 30px rgba(0,0,0,.35);
-  --ring:0 0 0 3px rgba(34,211,238,.35);
+  --bg-1:#0a0e13;     /* page */
+  --bg-2:#13171d;     /* cards */
+  --bg-3:#1a1f27;     /* hovers/rows */
+  --text-1:#d1d5db;   /* primary text */
+  --text-2:#9ca3af;   /* secondary text */
+  --border:#262b34;
+  --accent:#6b7280;   
+  --accent-2:#4b5563; 
+  --danger:#991b1b;
+  --ok:#065f46;
+  --radius:8px;
+  --shadow:0 4px 12px rgba(0,0,0,.4);
+  --ring:0 0 0 2px rgba(107,114,128,.25);
 }
 
 * { box-sizing:border-box }
@@ -20,9 +20,7 @@ html,body { height:100% }
 body{
   margin:0;
   font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
-  background: radial-gradient(1200px 600px at 10% -10%, rgba(139,92,246,.15), transparent) no-repeat,
-              radial-gradient(1200px 600px at 110% 10%, rgba(34,211,238,.1), transparent) no-repeat,
-              var(--bg-1);
+  background: var(--bg-1);
   color:var(--text-1);
   line-height:1.45;
 }
@@ -41,10 +39,9 @@ body{
 .hero h1{
   font-size: clamp(32px, 7vw, 56px);
   margin:0 0 8px;
-  font-weight:800;
-  letter-spacing:-.02em;
-  background: linear-gradient(90deg, var(--text-1), #cbd5e1 45%, #9ca3af);
-  -webkit-background-clip:text; background-clip:text; color:transparent;
+  font-weight:700;
+  letter-spacing:-.01em;
+  color:var(--text-1);
 }
 .hero .sub{
   color:var(--text-2);
@@ -60,7 +57,7 @@ body{
 }
 .card-header{
   padding:18px 20px 8px;
-  font-weight:700;
+  font-weight:600;
   font-size:18px;
 }
 .card-body{ padding:16px 20px 20px }
@@ -85,13 +82,13 @@ label{
 }
 .input, .select{
   width:100%;
-  background:#0f141b;
+  background:#0d1117;
   border:1px solid var(--border);
   color:var(--text-1);
   padding:12px 12px;
-  border-radius:10px;
+  border-radius:6px;
   outline:none;
-  transition:.15s border, .15s box-shadow, .15s transform;
+  transition:.15s border, .15s box-shadow;
 }
 .input::placeholder{ color:#6b7280 }
 .input:focus, .select:focus{
@@ -102,22 +99,23 @@ label{
 /* Buttons */
 .btn{
   appearance:none; border:1px solid var(--border);
-  background:#11161d; color:var(--text-1);
-  border-radius:12px; padding:12px 16px; font-weight:700;
-  cursor:pointer; transition:.15s transform, .15s background, .15s border-color, .15s box-shadow;
+  background:#1a1f27; color:var(--text-1);
+  border-radius:6px; padding:12px 16px; font-weight:600;
+  cursor:pointer; transition:.15s background, .15s border-color;
 }
-.btn:hover{ transform:translateY(-1px); background:#151c24 }
-.btn:active{ transform:translateY(0) }
+.btn:hover{ background:#20252e }
+.btn:active{ background:#181d24 }
 
 .btn-primary{
-  background: linear-gradient(90deg, var(--accent), var(--accent-2));
-  border-color:transparent; color:#061219;
+  background:#374151;
+  border-color:#4b5563; 
+  color:#e5e7eb;
 }
-.btn-primary:hover{ filter:brightness(1.05) }
+.btn-primary:hover{ background:#4b5563 }
 .btn-danger{
-  background:#1d1212; border-color:#3a1c1c; color:#ffd9d9;
+  background:#1a1414; border-color:#3a1c1c; color:#fca5a5;
 }
-.btn-danger:hover{ background:#291616; border-color:#5a2424 }
+.btn-danger:hover{ background:#231818; border-color:#5a2424 }
 
 /* Table */
 .table-wrap{ margin-top:18px }
@@ -128,19 +126,20 @@ label{
 }
 .table thead th{
   position:sticky; top:0; z-index:1;
-  background: #0f141b;
-  color:#cdd3db;
-  text-transform:uppercase; font-size:12px; letter-spacing:.08em;
+  background: #0d1117;
+  color:#9ca3af;
+  text-transform:uppercase; font-size:11px; letter-spacing:.06em;
   border-bottom:1px solid var(--border);
   padding:12px 14px;
+  font-weight:600;
 }
-.table th:first-child{ border-top-left-radius:10px }
-.table th:last-child{ border-top-right-radius:10px }
+.table th:first-child{ border-top-left-radius:6px }
+.table th:last-child{ border-top-right-radius:6px }
 
 .table tbody td{
   padding:14px; border-bottom:1px solid var(--border);
 }
-.table tbody tr:nth-child(even){ background:rgba(255,255,255,.02) }
+.table tbody tr:nth-child(even){ background:rgba(255,255,255,.015) }
 .table tbody tr:hover{ background:var(--bg-3) }
 
 .text-right{ text-align:right }
@@ -150,5 +149,5 @@ label{
 .empty{
   display:flex; align-items:center; justify-content:center;
   color:var(--text-2); height:140px; border:1px dashed var(--border);
-  border-radius:12px; margin-top:12px; background:rgba(255,255,255,.02);
+  border-radius:8px; margin-top:12px; background:rgba(255,255,255,.01);
 }

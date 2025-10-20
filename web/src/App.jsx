@@ -24,7 +24,7 @@ export default function App() {
   const [dataLoaded, setDataLoaded] = useState(false);
   const [showAdminPanel, setShowAdminPanel] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortConfig, setSortConfig] = useState({ key: 'sku', direction: 'asc' });
+  const [sortConfig, setSortConfig] = useState({ key: '', direction: 'asc' });
   const [showActivityLogs, setShowActivityLogs] = useState(false);
 
   useEffect(() => {
@@ -268,10 +268,9 @@ if (sortConfig.key === 'qty') {//sorts with numbers
   };
 
   const getSortIcon = (key) => {
-    if (sortConfig.key !== key) return '↕️';
-    return sortConfig.direction === 'asc' ? '↑' : '↓';
+    if (sortConfig.key !== key) return ' ↕';
+    return sortConfig.direction === 'asc' ? ' ↑' : ' ↓';
   };
-
 
   if (!user) {
     return <Login onLogin={handleLogin} />;
@@ -285,11 +284,11 @@ if (sortConfig.key === 'qty') {//sorts with numbers
 
       {/*heading on left, export button on right */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-        <h1>OurHouse — Inventory</h1>
+        <h1 style={{ color: '#d1d5db' }}>OurHouse — Inventory</h1>
 
-        <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
           {/* User info */}
-          <span style={{ color: '#94a3b8' }}>
+          <span style={{ color: '#9ca3af' }}>
             {user.name} ({user.role})
           </span>
           {/* Admin button */}
@@ -298,12 +297,14 @@ if (sortConfig.key === 'qty') {//sorts with numbers
               <button
                 onClick={() => setShowActivityLogs(true)}
                 style={{
-                  background: '#0ea5e9',
-                  color: '#fff',
+                  background: '#374151',
+                  color: '#e5e7eb',
                   padding: '8px 16px',
-                  border: 'none',
+                  border: '1px solid #4b5563',
                   borderRadius: '6px',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  fontWeight: '600',
+                  fontSize: '14px'
                 }}
               >
                 📊 Activity Logs
@@ -311,12 +312,14 @@ if (sortConfig.key === 'qty') {//sorts with numbers
               <button
                 onClick={() => setShowAdminPanel(true)}
                 style={{
-                  background: '#8b5cf6',
-                  color: '#fff',
+                  background: '#374151',
+                  color: '#e5e7eb',
                   padding: '8px 16px',
-                  border: 'none',
+                  border: '1px solid #4b5563',
                   borderRadius: '6px',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  fontWeight: '600',
+                  fontSize: '14px'
                 }}
               >
                 ⚙️ Admin
@@ -326,12 +329,14 @@ if (sortConfig.key === 'qty') {//sorts with numbers
           <button
             onClick={handleExport}
             style={{
-              background: '#16a34a',
-              color: '#fff',
+              background: '#1f2937',
+              color: '#d1d5db',
               padding: '8px 16px',
-              border: 'none',
+              border: '1px solid #374151',
               borderRadius: '6px',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              fontWeight: '600',
+              fontSize: '14px'
             }}
           >
             Export CSV
@@ -340,13 +345,14 @@ if (sortConfig.key === 'qty') {//sorts with numbers
           {/* Import CSV */}
           <label
             style={{
-              background: '#16a34a',
-              color: '#fff',
+              background: '#1f2937',
+              color: '#d1d5db',
               padding: '8px 16px',
+              border: '1px solid #374151',
               borderRadius: '6px',
               cursor: 'pointer',
-              fontSize: '1em',
-              fontWeight: 500,
+              fontSize: '14px',
+              fontWeight: '600',
               display: 'flex',
               alignItems: 'center'
             }}
@@ -359,43 +365,146 @@ if (sortConfig.key === 'qty') {//sorts with numbers
               onChange={handleImport}
             />
           </label>
-          <button onClick={handleLogout}>Logout</button>
+          <button 
+            onClick={handleLogout}
+            style={{
+              background: '#1a1f27',
+              color: '#d1d5db',
+              padding: '8px 16px',
+              border: '1px solid #374151',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontWeight: '600',
+              fontSize: '14px'
+            }}
+          >
+            Logout
+          </button>
         </div>
 
       </div>
 
       {!!err && (
-        <div style={{ background: '#512', padding: 10, margin: '10px 0', border: '1px solid #a55' }}>
+        <div style={{ background: '#1a1414', padding: 10, margin: '10px 0', border: '1px solid #3a1c1c', borderRadius: '6px', color: '#fca5a5' }}>
           {err}
         </div>
       )}
 
       <section style={{ marginBottom: 24 }}>
-        <h2>Receive / Ship</h2>
+        <h2 style={{ color: '#d1d5db' }}>Receive / Ship</h2>
         <div style={{ display: 'grid', gap: 8, gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr' }}>
-          <select value={locationId} onChange={e => onLocationChange(e.target.value)}>
+          <select 
+            value={locationId} 
+            onChange={e => onLocationChange(e.target.value)}
+            style={{
+              background: '#0d1117',
+              border: '1px solid #262b34',
+              color: '#d1d5db',
+              padding: '10px 12px',
+              borderRadius: '6px',
+              fontSize: '14px'
+            }}
+          >
             <option value="">Location…</option>
             {locations.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
           </select>
-          <select value={productId} onChange={e => setProductId(e.target.value)}>
+          <select 
+            value={productId} 
+            onChange={e => setProductId(e.target.value)}
+            style={{
+              background: '#0d1117',
+              border: '1px solid #262b34',
+              color: '#d1d5db',
+              padding: '10px 12px',
+              borderRadius: '6px',
+              fontSize: '14px'
+            }}
+          >
             <option value="">Product…</option>
             {products.map(p => <option key={p.id} value={p.id}>{p.sku} — {p.name}</option>)}
           </select>
-          <select value={binId} onChange={e => setBinId(e.target.value)}>
+          <select 
+            value={binId} 
+            onChange={e => setBinId(e.target.value)}
+            style={{
+              background: '#0d1117',
+              border: '1px solid #262b34',
+              color: '#d1d5db',
+              padding: '10px 12px',
+              borderRadius: '6px',
+              fontSize: '14px'
+            }}
+          >
             <option value="">Bin…</option>
             {bins.map(b => <option key={b.id} value={b.id}>{b.code}</option>)}
           </select>
-          <input type="number" placeholder="Qty" value={qty} onChange={e => setQty(e.target.value)} />
-          <input type="text" placeholder="Reference (optional)" value={reference} onChange={e => setReference(e.target.value)} />
+          <input 
+            type="number" 
+            placeholder="Qty" 
+            value={qty} 
+            onChange={e => setQty(e.target.value)}
+            style={{
+              background: '#0d1117',
+              border: '1px solid #262b34',
+              color: '#d1d5db',
+              padding: '10px 12px',
+              borderRadius: '6px',
+              fontSize: '14px'
+            }}
+          />
+          <input 
+            type="text" 
+            placeholder="Reference (optional)" 
+            value={reference} 
+            onChange={e => setReference(e.target.value)}
+            style={{
+              background: '#0d1117',
+              border: '1px solid #262b34',
+              color: '#d1d5db',
+              padding: '10px 12px',
+              borderRadius: '6px',
+              fontSize: '14px'
+            }}
+          />
           <div style={{ display: 'flex', gap: 8 }}>
-            <button onClick={receive}>Receive</button>
-            <button onClick={ship}>Ship</button>
+            <button 
+              onClick={receive}
+              style={{
+                background: '#374151',
+                color: '#e5e7eb',
+                padding: '10px 16px',
+                border: '1px solid #4b5563',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontWeight: '600',
+                fontSize: '14px',
+                flex: 1
+              }}
+            >
+              Receive
+            </button>
+            <button 
+              onClick={ship}
+              style={{
+                background: '#374151',
+                color: '#e5e7eb',
+                padding: '10px 16px',
+                border: '1px solid #4b5563',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontWeight: '600',
+                fontSize: '14px',
+                flex: 1
+              }}
+            >
+              Ship
+            </button>
           </div>
         </div>
       </section>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-        <h2 style={{ margin: 0 }}>Current Stock</h2>
+        <h2 style={{ margin: 0, color: '#d1d5db' }}>Current Stock</h2>
         <input
           type="text"
           placeholder="🔍 Search products, SKU, bin, description..."
@@ -403,10 +512,10 @@ if (sortConfig.key === 'qty') {//sorts with numbers
           onChange={e => setSearchTerm(e.target.value)}
           style={{
             padding: '10px 16px',
-            background: '#1a1a1a',
-            border: '1px solid #444',
+            background: '#0d1117',
+            border: '1px solid #262b34',
             borderRadius: '6px',
-            color: '#eee',
+            color: '#d1d5db',
             width: '400px',
             fontSize: '14px'
           }}
@@ -414,50 +523,46 @@ if (sortConfig.key === 'qty') {//sorts with numbers
       </div>
 
       {loading ? (
-        <div>Loading…</div>
+        <div style={{ color: '#9ca3af' }}>Loading…</div>
       ) : filteredStock.length === 0 ? (
-        <div>{searchTerm ? 'No results found.' : 'No stock yet.'}</div>
+        <div style={{ color: '#9ca3af' }}>{searchTerm ? 'No results found.' : 'No stock yet.'}</div>
       ) : (
         <div style={{ overflowX: 'auto' }}>
-          <table width="100%" border="1" cellPadding="8" style={{ borderCollapse: 'collapse', background: '#111' }}>
+          <table width="100%" border="1" cellPadding="8" style={{ borderCollapse: 'collapse', background: '#13171d', border: '1px solid #262b34' }}>
             <thead>
-              {(user.role === 'Manager' || user.role === 'Admin') && (
-                <th>Actions</th>
-              )}
-              <tr style={{ background: '#1a1a1a' }}>
-                <th 
+              <tr style={{ background: '#0d1117' }}>
+                {(user.role === 'Manager' || user.role === 'Admin') && (
+                  <th style={{ color: '#9ca3af', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid #262b34', padding: '12px' }}>
+                    Actions
+                  </th>
+                )}
+                <th
                   onClick={() => handleSort('sku')}
-                  style={{ cursor: 'pointer', userSelect: 'none' }}
+                  style={{ cursor: 'pointer', userSelect: 'none', color: '#9ca3af', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid #262b34', padding: '12px' }}
                 >
                   SKU {getSortIcon('sku')}
                 </th>
                 <th 
                   onClick={() => handleSort('product_name')}
-                  style={{ cursor: 'pointer', userSelect: 'none' }}
+                  style={{ cursor: 'pointer', userSelect: 'none', color: '#9ca3af', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid #262b34', padding: '12px' }}
                 >
                   Product {getSortIcon('product_name')}
                 </th>
                 <th 
                   onClick={() => handleSort('description')}
-                  style={{ cursor: 'pointer', userSelect: 'none', minWidth: '200px' }}
+                  style={{ cursor: 'pointer', userSelect: 'none', minWidth: '200px', color: '#9ca3af', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid #262b34', padding: '12px' }}
                 >
                   Description {getSortIcon('description')}
                 </th>
                 <th 
-                  onClick={() => handleSort('unit')}
-                  style={{ cursor: 'pointer', userSelect: 'none' }}
-                >
-                  Unit {getSortIcon('unit')}
-                </th>
-                <th 
                   onClick={() => handleSort('bin_code')}
-                  style={{ cursor: 'pointer', userSelect: 'none' }}
+                  style={{ cursor: 'pointer', userSelect: 'none', color: '#9ca3af', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid #262b34', padding: '12px' }}
                 >
                   Bin {getSortIcon('bin_code')}
                 </th>
                 <th 
                   onClick={() => handleSort('qty')}
-                  style={{ textAlign: 'right', cursor: 'pointer', userSelect: 'none' }}
+                  style={{ textAlign: 'right', cursor: 'pointer', userSelect: 'none', color: '#9ca3af', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid #262b34', padding: '12px' }}
                 >
                   Qty {getSortIcon('qty')}
                 </th>
@@ -465,31 +570,31 @@ if (sortConfig.key === 'qty') {//sorts with numbers
             </thead>
             <tbody>
               {filteredStock.map(row => (
-                <tr key={`${row.product_id}-${row.bin_id}`}>
+                <tr key={`${row.product_id}-${row.bin_id}`} style={{ borderBottom: '1px solid #262b34' }}>
                   {(user.role === 'Manager' || user.role === 'Admin') && (
                     <td>
                       <button
                         onClick={() => handleDelete('product', row.product_id, `${row.sku} - ${row.product_name}`)}
                         style={{
-                          background: '#ef4444',
-                          color: '#fff',
-                          padding: '4px 8px',
-                          border: 'none',
+                          background: '#1a1414',
+                          color: '#fca5a5',
+                          padding: '6px 10px',
+                          border: '1px solid #3a1c1c',
                           borderRadius: '4px',
                           cursor: 'pointer',
-                          fontSize: '12px'
+                          fontSize: '12px',
+                          fontWeight: '600'
                         }}
                       >
                         🗑️ Delete
                       </button>
                     </td>
                   )}
-                  <td>{row.sku}</td>
-                  <td style={{ fontWeight: '500' }}>{row.product_name}</td>
-                  <td style={{ color: '#94a3b8', fontSize: '14px' }}>{row.description || '—'}</td>
-                  <td>{row.unit}</td>
-                  <td>{row.bin_code}</td>
-                  <td style={{ textAlign: 'right', fontWeight: '600' }}>{row.qty}</td>
+                  <td style={{ color: '#d1d5db' }}>{row.sku}</td>
+                  <td style={{ fontWeight: '500', color: '#d1d5db' }}>{row.product_name}</td>
+                  <td style={{ color: '#9ca3af', fontSize: '14px' }}>{row.description || '—'}</td>
+                  <td style={{ color: '#d1d5db' }}>{row.bin_code}</td>
+                  <td style={{ textAlign: 'right', fontWeight: '600', color: '#d1d5db' }}>{row.qty}</td>
                 </tr>
               ))}
             </tbody>
@@ -498,7 +603,7 @@ if (sortConfig.key === 'qty') {//sorts with numbers
       )}
 
       {searchTerm && (
-        <div style={{ marginTop: 12, color: '#94a3b8', fontSize: '14px' }}>
+        <div style={{ marginTop: 12, color: '#9ca3af', fontSize: '14px' }}>
           Showing {filteredStock.length} of {stock.length} items
         </div>
       )}

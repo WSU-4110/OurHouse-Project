@@ -64,18 +64,18 @@ if (onLogin) {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)',
+      background: '#0a0e13',
       padding: '40px 20px',
       overflowY: 'auto'
     }}>
       <div style={{
-        background: '#1e293b',
-        borderRadius: '16px',
-        boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+        background: '#13171d',
+        borderRadius: '8px',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
         width: '100%',
         maxWidth: '440px',
         padding: '48px 40px',
-        border: '1px solid #334155'
+        border: '1px solid #262b34'
       }}>
         {/* Logo/Header */}
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
@@ -88,12 +88,12 @@ if (onLogin) {
             margin: 0,
             fontSize: '28px',
             fontWeight: '700',
-            color: '#f1f5f9',
+            color: '#d1d5db',
             marginBottom: '8px'
           }}>OurHouse</h1>
           <p style={{
             margin: 0,
-            color: '#94a3b8',
+            color: '#9ca3af',
             fontSize: '14px'
           }}>Inventory Management System</p>
         </div>
@@ -103,9 +103,9 @@ if (onLogin) {
           display: 'flex',
           gap: '8px',
           marginBottom: '32px',
-          background: '#0f172a',
+          background: '#0d1117',
           padding: '4px',
-          borderRadius: '8px'
+          borderRadius: '6px'
         }}>
           <button
             onClick={() => setIsLogin(true)}
@@ -113,9 +113,9 @@ if (onLogin) {
               flex: 1,
               padding: '10px',
               border: 'none',
-              borderRadius: '6px',
-              background: isLogin ? '#3b82f6' : 'transparent',
-              color: isLogin ? '#fff' : '#94a3b8',
+              borderRadius: '4px',
+              background: isLogin ? '#374151' : 'transparent',
+              color: isLogin ? '#e5e7eb' : '#9ca3af',
               cursor: 'pointer',
               fontWeight: '600',
               transition: 'all 0.2s'
@@ -129,9 +129,9 @@ if (onLogin) {
               flex: 1,
               padding: '10px',
               border: 'none',
-              borderRadius: '6px',
-              background: !isLogin ? '#3b82f6' : 'transparent',
-              color: !isLogin ? '#fff' : '#94a3b8',
+              borderRadius: '4px',
+              background: !isLogin ? '#374151' : 'transparent',
+              color: !isLogin ? '#e5e7eb' : '#9ca3af',
               cursor: 'pointer',
               fontWeight: '600',
               transition: 'all 0.2s'
@@ -144,11 +144,11 @@ if (onLogin) {
         {/* Error Message */}
         {error && (
           <div style={{
-            background: '#7f1d1d',
-            border: '1px solid #991b1b',
-            color: '#fecaca',
+            background: '#1a1414',
+            border: '1px solid #3a1c1c',
+            color: '#fca5a5',
             padding: '12px 16px',
-            borderRadius: '8px',
+            borderRadius: '6px',
             marginBottom: '24px',
             fontSize: '14px'
           }}>
@@ -162,8 +162,8 @@ if (onLogin) {
             <div style={{ marginBottom: '20px' }}>
               <label style={{
                 display: 'block',
-                color: '#cbd5e1',
-                fontSize: '14px',
+                color: '#9ca3af',
+                fontSize: '12px',
                 fontWeight: '500',
                 marginBottom: '8px'
               }}>
@@ -178,17 +178,17 @@ if (onLogin) {
                 style={{
                   width: '100%',
                   padding: '12px 16px',
-                  background: '#0f172a',
-                  border: '1px solid #334155',
-                  borderRadius: '8px',
-                  color: '#f1f5f9',
+                  background: '#0d1117',
+                  border: '1px solid #262b34',
+                  borderRadius: '6px',
+                  color: '#d1d5db',
                   fontSize: '15px',
                   outline: 'none',
                   transition: 'border-color 0.2s',
                   boxSizing: 'border-box'
                 }}
-                onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
-                onBlur={(e) => e.target.style.borderColor = '#334155'}
+                onFocus={(e) => e.target.style.borderColor = '#6b7280'}
+                onBlur={(e) => e.target.style.borderColor = '#262b34'}
               />
             </div>
           )}
@@ -196,8 +196,8 @@ if (onLogin) {
           <div style={{ marginBottom: '20px' }}>
             <label style={{
               display: 'block',
-              color: '#cbd5e1',
-              fontSize: '14px',
+              color: '#9ca3af',
+              fontSize: '12px',
               fontWeight: '500',
               marginBottom: '8px'
             }}>
@@ -212,25 +212,25 @@ if (onLogin) {
               style={{
                 width: '100%',
                 padding: '12px 16px',
-                background: '#0f172a',
-                border: '1px solid #334155',
-                borderRadius: '8px',
-                color: '#f1f5f9',
+                background: '#0d1117',
+                border: '1px solid #262b34',
+                borderRadius: '6px',
+                color: '#d1d5db',
                 fontSize: '15px',
                 outline: 'none',
                 transition: 'border-color 0.2s',
                 boxSizing: 'border-box'
               }}
-              onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
-              onBlur={(e) => e.target.style.borderColor = '#334155'}
+              onFocus={(e) => e.target.style.borderColor = '#6b7280'}
+              onBlur={(e) => e.target.style.borderColor = '#262b34'}
             />
           </div>
 
           <div style={{ marginBottom: !isLogin ? '20px' : '24px' }}>
             <label style={{
               display: 'block',
-              color: '#cbd5e1',
-              fontSize: '14px',
+              color: '#9ca3af',
+              fontSize: '12px',
               fontWeight: '500',
               marginBottom: '8px'
             }}>
@@ -246,17 +246,17 @@ if (onLogin) {
               style={{
                 width: '100%',
                 padding: '12px 16px',
-                background: '#0f172a',
-                border: '1px solid #334155',
-                borderRadius: '8px',
-                color: '#f1f5f9',
+                background: '#0d1117',
+                border: '1px solid #262b34',
+                borderRadius: '6px',
+                color: '#d1d5db',
                 fontSize: '15px',
                 outline: 'none',
                 transition: 'border-color 0.2s',
                 boxSizing: 'border-box'
               }}
-              onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
-              onBlur={(e) => e.target.style.borderColor = '#334155'}
+              onFocus={(e) => e.target.style.borderColor = '#6b7280'}
+              onBlur={(e) => e.target.style.borderColor = '#262b34'}
             />
           </div>
 
@@ -264,8 +264,8 @@ if (onLogin) {
             <div style={{marginBottom: '20px' }}>
               <label style={{
                 display: 'block',
-                color: '#cbd5e1',
-                fontSize: '14px',
+                color: '#9ca3af',
+                fontSize: '12px',
                 fontWeight: '500',
                 marginBottom: '8px'
               }}>
@@ -279,10 +279,10 @@ if (onLogin) {
                 style={{
                   width: '100%',
                   padding: '12px 16px',
-                  background: '#0f172a',
-                  border: '1px solid #334155',
-                  borderRadius: '8px',
-                  color: '#f1f5f9',
+                  background: '#0d1117',
+                  border: '1px solid #262b34',
+                  borderRadius: '6px',
+                  color: '#d1d5db',
                   fontSize: '15px',
                   outline: 'none',
                   cursor: 'pointer',
@@ -301,8 +301,8 @@ if (onLogin) {
             <div style={{ marginBottom: '24px' }}>
               <label style={{
                 display: 'block',
-                color: '#cbd5e1',
-                fontSize: '14px',
+                color: '#9ca3af',
+                fontSize: '12px',
                 fontWeight: '500',
                 marginBottom: '8px'
               }}>
@@ -318,22 +318,22 @@ if (onLogin) {
                 style={{
                   width: '100%',
                   padding: '12px 16px',
-                  background: '#0f172a',
-                  border: '1px solid #334155',
-                  borderRadius: '8px',
-                  color: '#f1f5f9',
+                  background: '#0d1117',
+                  border: '1px solid #262b34',
+                  borderRadius: '6px',
+                  color: '#d1d5db',
                   fontSize: '15px',
                   outline: 'none',
                   transition: 'border-color 0.2s',
                   boxSizing: 'border-box'
                 }}
-                onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
-                onBlur={(e) => e.target.style.borderColor = '#334155'}
+                onFocus={(e) => e.target.style.borderColor = '#6b7280'}
+                onBlur={(e) => e.target.style.borderColor = '#262b34'}
               />
               <p style={{
                 margin: '8px 0 0 0',
                 fontSize: '12px',
-                color: '#64748b'
+                color: '#6b7280'
               }}>
                 Contact your administrator for the secret code
               </p>
@@ -346,10 +346,10 @@ if (onLogin) {
             style={{
               width: '100%',
               padding: '14px',
-              background: loading ? '#64748b' : '#3b82f6',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '8px',
+              background: loading ? '#4b5563' : '#374151',
+              color: '#e5e7eb',
+              border: '1px solid #4b5563',
+              borderRadius: '6px',
               fontSize: '16px',
               fontWeight: '600',
               cursor: loading ? 'not-allowed' : 'pointer',
@@ -358,10 +358,10 @@ if (onLogin) {
               marginBottom: needsSecretCode ? 0 : '0'
             }}
             onMouseEnter={(e) => {
-              if (!loading) e.target.style.background = '#2563eb';
+              if (!loading) e.target.style.background = '#4b5563';
             }}
             onMouseLeave={(e) => {
-              if (!loading) e.target.style.background = '#3b82f6';
+              if (!loading) e.target.style.background = '#374151';
             }}
           >
             {loading ? 'Please wait...' : (isLogin ? 'Sign In' : 'Create Account')}
@@ -373,17 +373,17 @@ if (onLogin) {
           marginTop: '24px',
           textAlign: 'center',
           fontSize: '13px',
-          color: '#64748b'
+          color: '#6b7280'
         }}>
           {isLogin ? (
             <p style={{ margin: 0 }}>Need an account? <span
               onClick={() => setIsLogin(false)}
-              style={{ color: '#3b82f6', cursor: 'pointer', textDecoration: 'underline' }}
+              style={{ color: '#9ca3af', cursor: 'pointer', textDecoration: 'underline' }}
             >Register here</span></p>
           ) : (
             <p style={{ margin: 0 }}>Already have an account? <span 
               onClick={() => setIsLogin(true)}
-              style={{ color: '#3b82f6', cursor: 'pointer', textDecoration: 'underline' }}
+              style={{ color: '#9ca3af', cursor: 'pointer', textDecoration: 'underline' }}
             >Login here</span></p>
           )}
         </div>

@@ -32,7 +32,7 @@ create table if not exists stock_levels (
 create table if not exists stock_transactions (
   id bigserial primary key,
   occurred_at timestamptz default now(),
-  type text not null check (type in ('IN','OUT','MOVE')),
+  type text not null check (type in ('IN','OUT','SHIP')),
   product_id int not null references products(id),
   from_bin_id int references bins(id),
   to_bin_id int references bins(id),
