@@ -499,9 +499,15 @@ if (sortConfig.key === 'qty') {//sorts with numbers
       ) : filteredStock.length === 0 ? (
         <div style={{ color: '#9ca3af' }}>{searchTerm ? 'No results found.' : 'No stock yet.'}</div>
       ) : (
-        <div style={{ overflowX: 'auto' }}>
-          <table width="100%" border="1" cellPadding="8" style={{ borderCollapse: 'collapse', background: '#13171d', border: '1px solid #262b34' }}>
-            <thead>
+        <div style={{ 
+          overflowX: 'auto',
+          overflowY: 'auto', 
+          maxHeight: '600px', 
+          border: '1px solid #262b34',
+          borderRadius: '8px'
+        }}>
+          <table width="100%" border="0" cellPadding="8" style={{ borderCollapse: 'collapse', background: '#13171d' }}>
+            <thead style={{ position: 'sticky', top: 0, zIndex: 10 }}>
               <tr style={{ background: '#0d1117' }}>
                 {(user.role === 'Manager' || user.role === 'Admin') && (
                   <th style={{ color: '#9ca3af', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid #262b34', padding: '12px' }}>
