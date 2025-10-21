@@ -145,10 +145,10 @@ const handleDelete = async (type, id, name) => {
     if (!productId || !binId || !qty) return alert('Fill product, bin, qty');
     try {
       await axios.post(`${API}/transactions/receive`, {
-        productId: +productId, binId: +binId, qty: +qty, reference, user: user.name
+        productId: +productId, binId: +binId, qty: +qty, user: user.name
       });
       await reloadStock();
-      setQty(''); setReference('');
+      setQty('');
     } catch (e) {
       alert(e.response?.data?.error || 'Error');
     }
@@ -158,10 +158,10 @@ const handleDelete = async (type, id, name) => {
     if (!productId || !binId || !qty) return alert('Fill product, bin, qty');
     try {
       await axios.post(`${API}/transactions/ship`, {
-        productId: +productId, binId: +binId, qty: +qty, reference, user: user.name
+        productId: +productId, binId: +binId, qty: +qty, user: user.name
       });
       await reloadStock();
-      setQty(''); setReference('');
+      setQty('');
     } catch (e) {
       alert(e.response?.data?.error || 'Error');
     }
@@ -337,7 +337,7 @@ if (sortConfig.key === 'qty') {//sorts with numbers
 
       <section style={{ marginBottom: 24 }}>
         <h2 style={{ color: '#d1d5db' }}>Receive / Ship</h2>
-        <div style={{ display: 'grid', gap: 8, gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr' }}>
+        <div style={{ display: 'grid', gap: 8, gridTemplateColumns: '1fr 1fr 1fr 1fr auto auto' }}>
           <select 
             value={locationId} 
             onChange={e => onLocationChange(e.target.value)}
@@ -388,20 +388,6 @@ if (sortConfig.key === 'qty') {//sorts with numbers
             placeholder="Qty" 
             value={qty} 
             onChange={e => setQty(e.target.value)}
-            style={{
-              background: '#0d1117',
-              border: '1px solid #262b34',
-              color: '#d1d5db',
-              padding: '10px 12px',
-              borderRadius: '6px',
-              fontSize: '14px'
-            }}
-          />
-          <input 
-            type="text" 
-            placeholder="Reference (optional)" 
-            value={reference} 
-            onChange={e => setReference(e.target.value)}
             style={{
               background: '#0d1117',
               border: '1px solid #262b34',
@@ -481,6 +467,12 @@ if (sortConfig.key === 'qty') {//sorts with numbers
                     Actions
                   </th>
                 )}
+                <th 
+                  onClick={() => handleSort('location_name')}
+                  style={{ cursor: 'pointer', userSelect: 'none', color: '#9ca3af', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid #262b34', padding: '12px' }}
+                >
+                  Location {getSortIcon('location_name')}
+                </th>
                 <th
                   onClick={() => handleSort('sku')}
                   style={{ cursor: 'pointer', userSelect: 'none', color: '#9ca3af', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid #262b34', padding: '12px' }}
@@ -498,6 +490,12 @@ if (sortConfig.key === 'qty') {//sorts with numbers
                   style={{ cursor: 'pointer', userSelect: 'none', minWidth: '200px', color: '#9ca3af', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid #262b34', padding: '12px' }}
                 >
                   Description {getSortIcon('description')}
+                </th>
+                <th 
+                  onClick={() => handleSort('unit')}
+                  style={{ cursor: 'pointer', userSelect: 'none', color: '#9ca3af', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid #262b34', padding: '12px' }}
+                >
+                  Unit {getSortIcon('unit')}
                 </th>
                 <th 
                   onClick={() => handleSort('bin_code')}
@@ -535,9 +533,11 @@ if (sortConfig.key === 'qty') {//sorts with numbers
                       </button>
                     </td>
                   )}
+                  <td style={{ color: '#d1d5db' }}>{row.location_name}</td>
                   <td style={{ color: '#d1d5db' }}>{row.sku}</td>
                   <td style={{ fontWeight: '500', color: '#d1d5db' }}>{row.product_name}</td>
                   <td style={{ color: '#9ca3af', fontSize: '14px' }}>{row.description || '—'}</td>
+                  <td style={{ color: '#d1d5db' }}>{row.unit}</td>
                   <td style={{ color: '#d1d5db' }}>{row.bin_code}</td>
                   <td style={{ textAlign: 'right', fontWeight: '600', color: '#d1d5db' }}>{row.qty}</td>
                 </tr>
