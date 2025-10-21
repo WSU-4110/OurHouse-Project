@@ -67,27 +67,40 @@ router.post(
                     return typeof val === "string" ? val.trim() : val;
                 };
 
-                // Extract fields safely, allowing missing values for catalog imports
-                const location = (get("location") || "").toLowerCase();
-                const productName = ((get("product") || get("name")) || "").toLowerCase();
-                const bin = ((get("bin") || get("bin_code")) || "").toLowerCase();
+                // Extract fields safely and preserve original casing
+                const locationRaw = get("location") || "";
+                const productRaw = get("product") || get("name") || "";
+                const binRaw = get("bin") || get("bin_code") || "";
+
+                // Keep the original case for insertion
+                const location = locationRaw.trim();
+                const productName = productRaw.trim();
+
+                // Always store bins in uppercase but match case-insensitively
+                const bin = binRaw.trim().toUpperCase();
+                const binLookup = bin.toLowerCase();
+
+                // Use lowercase copies for case-insensitive matching
+                const locationLookup = location.toLowerCase();
+                const productLookup = productName.toLowerCase();
+
                 const qty = Number(get("qty") || get("quantity") || 0);
                 const sku = get("sku");
                 const description = get("description");
 
-                // --- Catalog import type: New Product Upload ---
+                // Catalog import type: New Product Upload
                 // Only inserts new products into the database
                 if (type === "catalog") {
                     // Skip invalid rows without a name or SKU
                     if (!productName && !sku) continue;
 
-                    // Check if the product already exists by SKU or name
+                    // Check if the product already exists by SKU or name (case-insensitive)
                     const existing = await client.query(
                         "SELECT id FROM products WHERE LOWER(sku)=LOWER($1) OR LOWER(name)=LOWER($2)",
-                        [sku, productName]
+                        [sku, productLookup]
                     );
 
-                    // Insert new product if not found
+                    // Insert new product if not found (preserve original case)
                     if (existing.rowCount === 0) {
                         await client.query(
                             "INSERT INTO products(sku, name, description) VALUES ($1,$2,$3)",
@@ -103,10 +116,10 @@ router.post(
                 // Skip if row is incomplete or invalid for shipment/reconcile
                 if (!location || !bin || !productName || qty <= 0) continue;
 
-                // Find or create matching location
+                // Find or create matching location (case-insensitive check, original insert)
                 const locRes = await client.query(
                     "SELECT id FROM locations WHERE LOWER(name)=LOWER($1)",
-                    [location]
+                    [locationLookup]
                 );
                 const locationId =
                     locRes.rowCount > 0
@@ -118,26 +131,36 @@ router.post(
                             )
                         ).rows[0].id;
 
-                // Find or create matching bin
+                // Find bin by case-insensitive match, but always store uppercase
                 const binRes = await client.query(
-                    "SELECT id FROM bins WHERE location_id=$1 AND LOWER(code)=LOWER($2)",
-                    [locationId, bin]
+                    "SELECT id, code FROM bins WHERE location_id=$1 AND LOWER(code)=LOWER($2)",
+                    [locationId, binLookup]
                 );
-                const binId =
-                    binRes.rowCount > 0
-                        ? binRes.rows[0].id
-                        : (
-                            await client.query(
-                                "INSERT INTO bins(location_id, code) VALUES ($1,$2) RETURNING id",
-                                [locationId, bin]
-                            )
-                        ).rows[0].id;
 
-                // Find or create matching product
+                let binId;
+                if (binRes.rowCount > 0) {
+                    // Bin exists - update to uppercase if necessary
+                    binId = binRes.rows[0].id;
+                    if (binRes.rows[0].code !== bin) {
+                        await client.query(
+                            "UPDATE bins SET code=$2 WHERE id=$1",
+                            [binId, bin]
+                        );
+                    }
+                } else {
+                    // Insert new bin with uppercase code
+                    const newBin = await client.query(
+                        "INSERT INTO bins(location_id, code) VALUES ($1,$2) RETURNING id",
+                        [locationId, bin]
+                    );
+                    binId = newBin.rows[0].id;
+                }
+
+                // Find or create matching product (case-insensitive check, original insert)
                 let productId;
                 const prodRes = await client.query(
                     "SELECT id FROM products WHERE LOWER(name)=LOWER($1)",
-                    [productName]
+                    [productLookup]
                 );
                 if (prodRes.rowCount > 0) {
                     productId = prodRes.rows[0].id;
