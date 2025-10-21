@@ -19,7 +19,7 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
   const [loading, setLoading] = useState(false);
   const [locations, setLocations] = useState([]);
 
-  useState(() => {
+  useEffect(() => {
     if (activeTab === 'bins') {
       loadLocations();
     }
