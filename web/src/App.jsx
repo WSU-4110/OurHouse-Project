@@ -4,6 +4,9 @@ import Login from './login.jsx';
 import "./App.css";
 import AdminPanel from './AdminPanel';
 import ActivityLogs from './ActivityLogs';
+import ExportMenu from './ExportMenu.jsx';
+import ImportMenu from './ImportMenu.jsx';
+import LowStockBanner from './LowStockBanner';
 import Notifications from './Notifications';
 import ProductHistory from './ProductHistory';
 import StockTransfer from './StockTransfer';
@@ -28,6 +31,8 @@ export default function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: '', direction: 'asc' });
   const [showActivityLogs, setShowActivityLogs] = useState(false);
+  const [showExportMenu, setShowExportMenu] = useState(false);
+  const [showImportMenu, setShowImportMenu] = useState(false);
   const [showProductHistory, setShowProductHistory] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showStockTransfer, setShowStockTransfer] = useState(false);
@@ -120,67 +125,6 @@ const handleDelete = async (type, id, name) => {
     window.showNotification?.(e.response?.data?.error || `Failed to delete ${type}`, 'error');
   }
 };
-
-//CSV Export Button
-const handleExport = async () => {
-  try {
-    const token = localStorage.getItem('token');
-    const res = await fetch("http://localhost:3000/export/csv", {
-      method: "GET",
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    });
-
-    if (!res.ok) throw new Error("Failed to download");
-
-    const blob = await res.blob();
-    const url = window.URL.createObjectURL(blob);
-
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "inventory.csv";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    window.URL.revokeObjectURL(url);
-    window.showNotification?.('CSV exported successfully', 'success');
-  } catch (err) {
-    console.error(err);
-    window.showNotification?.("Export failed: " + err.message, 'error');
-  }
-};
-
-// CSV Import Button
-const handleImport = async (e) => {
-  const file = e.target.files?.[0];
-  if (!file) return;
-
-  const formData = new FormData();
-  formData.append("file", file);
-
-  try {
-    const token = localStorage.getItem('token');
-    const res = await fetch("http://localhost:3000/import/csv", {
-      method: "POST",
-      headers: {
-        'Authorization': `Bearer ${token}`
-      },
-      body: formData,
-    });
-
-    if (!res.ok) throw new Error("Import failed");
-    const data = await res.json();
-    window.showNotification?.(`Imported ${data.imported} records successfully`, 'success');
-    await reloadStock();
-  } catch (err) {
-    console.error(err);
-    window.showNotification?.("Import failed - " + err.message, 'error');
-  } finally {
-    e.target.value = null;
-  }
-};
-
   const onLocationChange = async (id) => {
     setLocationId(id);
     setBinId('');
@@ -313,6 +257,8 @@ if (sortConfig.key === 'qty') {//sorts with numbers
     <Notifications />
     <div style={{ maxWidth: 1200, margin: '40px auto', fontFamily: 'system-ui, sans-serif', color: '#eee' }}>
 
+      <LowStockBanner />
+
       {/*heading on left, export button on right */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
         <h1 style={{ color: '#d1d5db' }}>OurHouse — Inventory</h1>
@@ -323,79 +269,75 @@ if (sortConfig.key === 'qty') {//sorts with numbers
             {user.name} ({user.role})
           </span>
           {/* Admin button */}
-          {(user.role === 'Manager' || user.role === 'Admin') && (
-            <>
-              <button
-                onClick={() => setShowActivityLogs(true)}
-                style={{
-                  background: '#374151',
-                  color: '#e5e7eb',
-                  padding: '8px 16px',
-                  border: '1px solid #4b5563',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  fontWeight: '600',
-                  fontSize: '14px'
-                }}
-              >
-                📊 Activity Logs
-              </button>
-              <button
-                onClick={() => setShowAdminPanel(true)}
-                style={{
-                  background: '#374151',
-                  color: '#e5e7eb',
-                  padding: '8px 16px',
-                  border: '1px solid #4b5563',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  fontWeight: '600',
-                  fontSize: '14px'
-                }}
-              >
-                ⚙️ Admin
-              </button>
-            </>
-          )}
-          <button
-            onClick={handleExport}
-            style={{
-              background: '#1f2937',
-              color: '#d1d5db',
-              padding: '8px 16px',
-              border: '1px solid #374151',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontWeight: '600',
-              fontSize: '14px'
-            }}
-          >
-            Export CSV
-          </button>
+            {/* Admin & Manager only */}
+            {(user.role === 'Manager' || user.role === 'Admin') && (
+                <>
+                    <button
+                        onClick={() => setShowActivityLogs(true)}
+                        style={{
+                            background: '#374151',
+                            color: '#e5e7eb',
+                            padding: '8px 16px',
+                            border: '1px solid #4b5563',
+                            borderRadius: '6px',
+                            cursor: 'pointer',
+                            fontWeight: '600',
+                            fontSize: '14px'
+                        }}
+                    >
+                        📊 Activity Logs
+                    </button>
+                    <button
+                        onClick={() => setShowAdminPanel(true)}
+                        style={{
+                            background: '#374151',
+                            color: '#e5e7eb',
+                            padding: '8px 16px',
+                            border: '1px solid #4b5563',
+                            borderRadius: '6px',
+                            cursor: 'pointer',
+                            fontWeight: '600',
+                            fontSize: '14px'
+                        }}
+                    >
+                        ⚙️ Admin
+                    </button>
+                </>
+            )}
 
-          {/* Import CSV */}
-          <label
-            style={{
-              background: '#1f2937',
-              color: '#d1d5db',
-              padding: '8px 16px',
-              border: '1px solid #374151',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontSize: '14px',
-              fontWeight: '600',
-              display: 'flex',
-              alignItems: 'center'
-            }}
-          >
-            Import CSV
-            <input
-              type="file"
-              accept=".csv"
-              style={{ display: 'none' }}
-              onChange={handleImport}
-            />
-          </label>
+            {/* Import/Export visible to all roles */}
+            <button
+                onClick={() => setShowExportMenu(true)}
+                style={{
+                    background: '#374151',
+                    color: '#e5e7eb',
+                    padding: '8px 16px',
+                    border: '1px solid #4b5563',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontWeight: '600',
+                    fontSize: '14px'
+                }}
+            >
+                📤 Export
+            </button>
+
+            <button
+                onClick={() => setShowImportMenu(true)}
+                style={{
+                    background: '#374151',
+                    color: '#e5e7eb',
+                    padding: '8px 16px',
+                    border: '1px solid #4b5563',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontWeight: '600',
+                    fontSize: '14px'
+                }}
+            >
+                📥 Import
+            </button>
+          
           <button 
             onClick={handleLogout}
             style={{
@@ -663,31 +605,50 @@ if (sortConfig.key === 'qty') {//sorts with numbers
         </div>
       )}
 
-      {showAdminPanel && (
-        <AdminPanel
-          user={user}
-          onClose={() => setShowAdminPanel(false)}
-          onUpdate={reloadAllData}
-        />
-      )}
+        {showAdminPanel && (
+            <AdminPanel
+                user={user}
+                onClose={() => setShowAdminPanel(false)}
+                onUpdate={reloadAllData}
+            />
+        )}
+
         {showActivityLogs && (
-          <ActivityLogs onClose={() => setShowActivityLogs(false)} />
+            <ActivityLogs onClose={() => setShowActivityLogs(false)} />
         )}
+
+        {showExportMenu && (
+            <ExportMenu
+                user={user}
+                onClose={() => setShowExportMenu(false)}
+            />
+        )}
+
+        {showImportMenu && (
+            <ImportMenu
+                user={user}
+                onClose={() => setShowImportMenu(false)}
+                onImported={reloadAllData}
+            />
+        )}
+
         {showProductHistory && selectedProduct && (
-          <ProductHistory
-            productId={selectedProduct.id}
-            productName={selectedProduct.name}
-            sku={selectedProduct.sku}
-            onClose={() => setShowProductHistory(false)}
-          />
+            <ProductHistory
+                productId={selectedProduct.id}
+                productName={selectedProduct.name}
+                sku={selectedProduct.sku}
+                onClose={() => setShowProductHistory(false)}
+            />
         )}
+
         {showStockTransfer && (
-          <StockTransfer
-            user={user}
-            onClose={() => setShowStockTransfer(false)}
-            onUpdate={reloadAllData}
-          />
+            <StockTransfer
+                user={user}
+                onClose={() => setShowStockTransfer(false)}
+                onUpdate={reloadAllData}
+            />
         )}
+
       </div>
       </>
   );
