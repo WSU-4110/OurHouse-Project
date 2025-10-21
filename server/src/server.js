@@ -6,12 +6,14 @@ const { Parser } = require('json2csv');
 require('dotenv').config();
 const {authRequired, roleRequired} = require('./auth');
 const authRoutes = require('./routes/authRoutes');
+const stockRoutes = require('./routes/stockRoutes');
 
 const app = express();
 const corsOrigin = process.env.CORS_ORIGIN || 'http://localhost:5173';
 app.use(cors({ origin: corsOrigin, credentials: true }));
 app.use(express.json());
 app.use('/auth', authRoutes);
+app.use('/stock', stockRoutes);
 
 const pool = new Pool({
   host: process.env.PGHOST || 'localhost',

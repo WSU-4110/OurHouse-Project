@@ -4,6 +4,7 @@ import Login from './login.jsx';
 import "./App.css";
 import AdminPanel from './AdminPanel';
 import ActivityLogs from './ActivityLogs';
+import LowStockBanner from './LowStockBanner';
 
 const API = 'http://localhost:3000';
 
@@ -281,6 +282,8 @@ if (sortConfig.key === 'qty') {//sorts with numbers
 
   return (
     <div style={{ maxWidth: 1200, margin: '40px auto', fontFamily: 'system-ui, sans-serif', color: '#eee' }}>
+
+      <LowStockBanner />
 
       {/*heading on left, export button on right */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
