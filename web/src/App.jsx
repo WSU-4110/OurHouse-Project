@@ -125,6 +125,21 @@ const handleDelete = async (type, id, name) => {
     window.showNotification?.(e.response?.data?.error || `Failed to delete ${type}`, 'error');
   }
 };
+
+const handleDeleteStock = async (productId, binId, productName, binCode, locationName) => {
+  if (!confirm(`Remove ${productName} from bin ${binCode} in ${locationName}?\n\nThis will only delete stock from this specific bin.`)) {
+    return;
+  }
+
+  try {
+    await axios.delete(`${API}/admin/stock/${productId}/${binId}`);
+    window.showNotification?.(`Stock removed from ${binCode} successfully`, 'success');
+    await reloadAllData();
+  } catch (e) {
+    window.showNotification?.(e.response?.data?.error || 'Failed to delete stock', 'error');
+  }
+};
+
   const onLocationChange = async (id) => {
     setLocationId(id);
     setBinId('');
@@ -255,7 +270,13 @@ if (sortConfig.key === 'qty') {//sorts with numbers
   return (
     <>
     <Notifications />
-      <div style={{ maxWidth: 1200, margin: '100px auto 40px', fontFamily: 'system-ui, sans-serif', color: '#eee' }}>
+    <div style={{ 
+      maxWidth: 1200, 
+      margin: '40px auto', 
+      paddingBottom: '80px', 
+      fontFamily: 'system-ui, sans-serif', 
+      color: '#eee' 
+    }}>
 
       <LowStockBanner />
 
@@ -564,7 +585,13 @@ if (sortConfig.key === 'qty') {//sorts with numbers
                   {(user.role === 'Manager' || user.role === 'Admin') && (
                     <td>
                       <button
-                        onClick={() => handleDelete('product', row.product_id, `${row.sku} - ${row.product_name}`)}
+                        onClick={() => handleDeleteStock(
+                          row.product_id, 
+                          row.bin_id, 
+                          row.product_name, 
+                          row.bin_code, 
+                          row.location_name
+                        )}
                         style={{
                           background: '#1a1414',
                           color: '#fca5a5',
@@ -576,7 +603,7 @@ if (sortConfig.key === 'qty') {//sorts with numbers
                           fontWeight: '600'
                         }}
                       >
-                        🗑️ Delete
+                        🗑️ Remove
                       </button>
                     </td>
                   )}
