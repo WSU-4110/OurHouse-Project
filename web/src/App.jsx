@@ -255,7 +255,7 @@ if (sortConfig.key === 'qty') {//sorts with numbers
   return (
     <>
     <Notifications />
-      <div style={{ maxWidth: 1200, margin: '100px auto 40px', fontFamily: 'system-ui, sans-serif', color: '#eee' }}>
+     <div style={{ maxWidth: 1200, margin: '40px auto', fontFamily: 'system-ui, sans-serif', color: '#eee' }}>
 
       <LowStockBanner />
 

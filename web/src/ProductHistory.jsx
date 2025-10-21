@@ -6,6 +6,8 @@ const API = 'http://localhost:3000';
 export default function ProductHistory({ productId, productName, sku, onClose }) {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   useEffect(() => {
     loadTransactions();
@@ -22,6 +24,49 @@ export default function ProductHistory({ productId, productName, sku, onClose })
     } finally {
       setLoading(false);
     }
+  };
+
+  const exportToCSV = () => {
+    const dataToExport = filteredTransactions.length > 0 ? filteredTransactions : transactions;
+    
+    if (dataToExport.length === 0) {
+      window.showNotification?.('No transactions to export', 'error');
+      return;
+    }
+
+    const headers = ['Date/Time', 'Type', 'Quantity', 'Location Details', 'Reference', 'User'];
+    
+    const rows = dataToExport.map(t => {
+      const date = new Date(t.occurred_at).toLocaleString('en-US');
+      const type = t.type === 'IN' ? 'RECEIVED' : t.type === 'OUT' ? 'SHIPPED' : 'MOVED';
+      const qty = t.qty;
+      const location = t.type === 'MOVE' 
+        ? `From ${t.from_bin_code} to ${t.to_bin_code}`
+        : t.type === 'IN' 
+        ? `To bin ${t.to_bin_code}`
+        : `From bin ${t.from_bin_code}`;
+      const reference = t.reference || '';
+      const user = t.performed_by;
+      
+      return [date, type, qty, location, reference, user];
+    });
+
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `${sku}_${productName}_history_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    window.showNotification?.('Transaction history exported successfully', 'success');
   };
 
   const getTransactionIcon = (type) => {
@@ -52,6 +97,34 @@ export default function ProductHistory({ productId, productName, sku, onClose })
     });
   };
 
+  const getFilteredTransactions = () => {
+    if (!startDate && !endDate) {
+      return transactions;
+    }
+
+    return transactions.filter(t => {
+      const transactionDate = new Date(t.occurred_at);
+      const start = startDate ? new Date(startDate) : null;
+      const end = endDate ? new Date(endDate + 'T23:59:59') : null;
+
+      if (start && end) {
+        return transactionDate >= start && transactionDate <= end;
+      } else if (start) {
+        return transactionDate >= start;
+      } else if (end) {
+        return transactionDate <= end;
+      }
+      return true;
+    });
+  };
+
+  const clearDateFilters = () => {
+    setStartDate('');
+    setEndDate('');
+  };
+
+  const filteredTransactions = getFilteredTransactions();
+
   return (
     <div style={{
       position: 'fixed',
@@ -78,7 +151,6 @@ export default function ProductHistory({ productId, productName, sku, onClose })
         display: 'flex',
         flexDirection: 'column'
       }}>
-        {/* Header */}
         <div style={{
           padding: '24px',
           borderBottom: '1px solid #262b34',
@@ -92,24 +164,105 @@ export default function ProductHistory({ productId, productName, sku, onClose })
               {sku} - {productName}
             </p>
           </div>
-          <button
-            onClick={onClose}
-            style={{
-              background: 'transparent',
-              border: 'none',
-              color: '#9ca3af',
-              fontSize: '24px',
-              cursor: 'pointer',
-              padding: '0',
-              width: '32px',
-              height: '32px'
-            }}
-          >
-            ×
-          </button>
+          <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+            <button
+              onClick={exportToCSV}
+              disabled={loading || transactions.length === 0}
+              style={{
+                background: '#374151',
+                color: '#e5e7eb',
+                padding: '8px 16px',
+                border: '1px solid #4b5563',
+                borderRadius: '6px',
+                cursor: loading || transactions.length === 0 ? 'not-allowed' : 'pointer',
+                fontWeight: '600',
+                fontSize: '14px',
+                opacity: loading || transactions.length === 0 ? 0.5 : 1
+              }}
+            >
+              📥 Export CSV
+            </button>
+            <button
+              onClick={onClose}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: '#9ca3af',
+                fontSize: '24px',
+                cursor: 'pointer',
+                padding: '0',
+                width: '32px',
+                height: '32px'
+              }}
+            >
+              ×
+            </button>
+          </div>
         </div>
 
-        {/* Content */}
+        <div style={{
+          padding: '16px 24px',
+          background: '#0d1117',
+          borderBottom: '1px solid #262b34',
+          display: 'flex',
+          gap: '12px',
+          alignItems: 'center',
+          flexWrap: 'wrap'
+        }}>
+          <span style={{ color: '#9ca3af', fontSize: '14px', fontWeight: '600' }}>
+            Filter by Date:
+          </span>
+          <input
+            type="date"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+            style={{
+              background: '#13171d',
+              border: '1px solid #262b34',
+              color: '#d1d5db',
+              padding: '6px 12px',
+              borderRadius: '6px',
+              fontSize: '14px'
+            }}
+            placeholder="Start date"
+          />
+          <span style={{ color: '#6b7280' }}>to</span>
+          <input
+            type="date"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+            style={{
+              background: '#13171d',
+              border: '1px solid #262b34',
+              color: '#d1d5db',
+              padding: '6px 12px',
+              borderRadius: '6px',
+              fontSize: '14px'
+            }}
+            placeholder="End date"
+          />
+          {(startDate || endDate) && (
+            <button
+              onClick={clearDateFilters}
+              style={{
+                background: '#374151',
+                color: '#e5e7eb',
+                padding: '6px 12px',
+                border: '1px solid #4b5563',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: '600'
+              }}
+            >
+              Clear
+            </button>
+          )}
+          <span style={{ color: '#6b7280', fontSize: '13px', marginLeft: 'auto' }}>
+            Showing {filteredTransactions.length} of {transactions.length} transactions
+          </span>
+        </div>
+
         <div style={{ 
           padding: '24px', 
           overflowY: 'auto',
@@ -119,13 +272,16 @@ export default function ProductHistory({ productId, productName, sku, onClose })
             <div style={{ textAlign: 'center', color: '#9ca3af', padding: '40px' }}>
               Loading transactions...
             </div>
-          ) : transactions.length === 0 ? (
+          ) : filteredTransactions.length === 0 ? (
             <div style={{ textAlign: 'center', color: '#9ca3af', padding: '40px' }}>
-              No transactions found for this product
+              {transactions.length === 0 
+                ? 'No transactions found for this product'
+                : 'No transactions match the selected date range'
+              }
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              {transactions.map(transaction => (
+              {filteredTransactions.map(transaction => (
                 <div
                   key={transaction.id}
                   style={{
