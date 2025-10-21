@@ -5,6 +5,9 @@ import "./App.css";
 import AdminPanel from './AdminPanel';
 import ActivityLogs from './ActivityLogs';
 import LowStockBanner from './LowStockBanner';
+import Notifications from './Notifications';
+import ProductHistory from './ProductHistory';
+import StockTransfer from './StockTransfer';
 
 const API = 'http://localhost:3000';
 
@@ -19,7 +22,6 @@ export default function App() {
   const [productId, setProductId] = useState('');
   const [binId, setBinId] = useState('');
   const [qty, setQty] = useState('');
-  const [reference, setReference] = useState('');
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState('');
   const [dataLoaded, setDataLoaded] = useState(false);
@@ -27,6 +29,9 @@ export default function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: '', direction: 'asc' });
   const [showActivityLogs, setShowActivityLogs] = useState(false);
+  const [showProductHistory, setShowProductHistory] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showStockTransfer, setShowStockTransfer] = useState(false);
 
   useEffect(() => {
     const savedToken = localStorage.getItem('token');
@@ -39,6 +44,7 @@ export default function App() {
     else {
       setLoading(false);}
   }, []);
+
 useEffect(() => {
     if (!user || dataLoaded) {
       return;
@@ -109,10 +115,10 @@ const handleDelete = async (type, id, name) => {
 
   try {
     await axios.delete(`${API}/admin/${type}s/${id}`);
-    alert(`${type} deleted successfully`);
+    window.showNotification?.(`${type} deleted successfully`, 'success');
     await reloadAllData();
   } catch (e) {
-    alert(e.response?.data?.error || `Failed to delete ${type}`);
+    window.showNotification?.(e.response?.data?.error || `Failed to delete ${type}`, 'error');
   }
 };
 
@@ -139,9 +145,10 @@ const handleExport = async () => {
     a.click();
     a.remove();
     window.URL.revokeObjectURL(url);
+    window.showNotification?.('CSV exported successfully', 'success');
   } catch (err) {
     console.error(err);
-    alert("Export failed: " + err.message);
+    window.showNotification?.("Export failed: " + err.message, 'error');
   }
 };
 
@@ -165,15 +172,16 @@ const handleImport = async (e) => {
 
     if (!res.ok) throw new Error("Import failed");
     const data = await res.json();
-    alert(`Imported ${data.imported} records successfully`);
+    window.showNotification?.(`Imported ${data.imported} records successfully`, 'success');
     await reloadStock();
   } catch (err) {
     console.error(err);
-    alert("Import failed - " + err.message);
+    window.showNotification?.("Import failed - " + err.message, 'error');
   } finally {
     e.target.value = null;
   }
 };
+
   const onLocationChange = async (id) => {
     setLocationId(id);
     setBinId('');
@@ -194,30 +202,39 @@ const handleImport = async (e) => {
 
   
   const receive = async () => {
-    if (!productId || !binId || !qty) return alert('Fill product, bin, qty');
+    if (!productId || !binId || !qty) {
+      window.showNotification?.('Please fill in product, bin, and quantity', 'error');
+      return;
+    }
     try {
       await axios.post(`${API}/transactions/receive`, {
         productId: +productId, binId: +binId, qty: +qty, user: user.name
       });
       await reloadStock();
       setQty('');
+      window.showNotification?.('Stock received successfully', 'success');
     } catch (e) {
-      alert(e.response?.data?.error || 'Error');
+      window.showNotification?.(e.response?.data?.error || 'Receive failed', 'error');
     }
   };
 
   const ship = async () => {
-    if (!productId || !binId || !qty) return alert('Fill product, bin, qty');
+    if (!productId || !binId || !qty) {
+      window.showNotification?.('Please fill in product, bin, and quantity', 'error');
+      return;
+    }
     try {
       await axios.post(`${API}/transactions/ship`, {
         productId: +productId, binId: +binId, qty: +qty, user: user.name
       });
       await reloadStock();
       setQty('');
+      window.showNotification?.('Stock shipped successfully', 'success');
     } catch (e) {
-      alert(e.response?.data?.error || 'Error');
+      window.showNotification?.(e.response?.data?.error || 'Ship failed', 'error');
     }
   };
+
 //function for sortiing
   const handleSort = (key) => {
     let direction = 'asc';
@@ -226,6 +243,7 @@ const handleImport = async (e) => {
     }
     setSortConfig({ key, direction });
   };
+
 //stock data with product details
   const getEnrichedStock = () => {
     return stock.map(item => {
@@ -237,6 +255,7 @@ const handleImport = async (e) => {
       };
     });
   };
+
     //filters and sorts stock
     const getFilteredAndSortedStock = () => {
     let enrichedStock = getEnrichedStock();
@@ -246,7 +265,8 @@ const handleImport = async (e) => {
         item.sku?.toLowerCase().includes(term) ||
         item.product_name?.toLowerCase().includes(term) ||
         item.bin_code?.toLowerCase().includes(term) ||
-        item.description?.toLowerCase().includes(term)
+        item.description?.toLowerCase().includes(term) ||
+        item.location_name?.toLowerCase().includes(term)
       );
     }
     enrichedStock.sort((a, b) => { 
@@ -273,6 +293,15 @@ if (sortConfig.key === 'qty') {//sorts with numbers
     return sortConfig.direction === 'asc' ? ' ↑' : ' ↓';
   };
 
+  const handleProductClick = (row) => {
+    setSelectedProduct({
+      id: row.product_id,
+      name: row.product_name,
+      sku: row.sku
+    });
+    setShowProductHistory(true);
+  };
+  
   if (!user) {
     return <Login onLogin={handleLogin} />;
   }
@@ -281,6 +310,8 @@ if (sortConfig.key === 'qty') {//sorts with numbers
 
 
   return (
+    <>
+    <Notifications />
     <div style={{ maxWidth: 1200, margin: '40px auto', fontFamily: 'system-ui, sans-serif', color: '#eee' }}>
 
       <LowStockBanner />
@@ -392,70 +423,86 @@ if (sortConfig.key === 'qty') {//sorts with numbers
           {err}
         </div>
       )}
-
+      
       <section style={{ marginBottom: 24 }}>
-        <h2 style={{ color: '#d1d5db' }}>Receive / Ship</h2>
-        <div style={{ display: 'grid', gap: 8, gridTemplateColumns: '1fr 1fr 1fr 1fr auto auto' }}>
-          <select 
-            value={locationId} 
-            onChange={e => onLocationChange(e.target.value)}
-            style={{
-              background: '#0d1117',
-              border: '1px solid #262b34',
-              color: '#d1d5db',
-              padding: '10px 12px',
-              borderRadius: '6px',
-              fontSize: '14px'
-            }}
-          >
-            <option value="">Location…</option>
-            {locations.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
-          </select>
-          <select 
-            value={productId} 
-            onChange={e => setProductId(e.target.value)}
-            style={{
-              background: '#0d1117',
-              border: '1px solid #262b34',
-              color: '#d1d5db',
-              padding: '10px 12px',
-              borderRadius: '6px',
-              fontSize: '14px'
-            }}
-          >
-            <option value="">Product…</option>
-            {products.map(p => <option key={p.id} value={p.id}>{p.sku} — {p.name}</option>)}
-          </select>
-          <select 
-            value={binId} 
-            onChange={e => setBinId(e.target.value)}
-            style={{
-              background: '#0d1117',
-              border: '1px solid #262b34',
-              color: '#d1d5db',
-              padding: '10px 12px',
-              borderRadius: '6px',
-              fontSize: '14px'
-            }}
-          >
-            <option value="">Bin…</option>
-            {bins.map(b => <option key={b.id} value={b.id}>{b.code}</option>)}
-          </select>
-          <input 
-            type="number" 
-            placeholder="Qty" 
-            value={qty} 
-            onChange={e => setQty(e.target.value)}
-            style={{
-              background: '#0d1117',
-              border: '1px solid #262b34',
-              color: '#d1d5db',
-              padding: '10px 12px',
-              borderRadius: '6px',
-              fontSize: '14px'
-            }}
-          />
-          <div style={{ display: 'flex', gap: 8 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <h2 style={{ color: '#d1d5db' }}>Receive / Ship</h2>
+            <button
+              onClick={() => setShowStockTransfer(true)}
+              style={{
+                background: '#374151',
+                color: '#e5e7eb',
+                padding: '8px 16px',
+                border: '1px solid #4b5563',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontWeight: '600',
+                fontSize: '14px'
+              }}
+            >
+              🔄 Transfer Stock
+            </button>
+          </div>
+          <div style={{ display: 'grid', gap: 8, gridTemplateColumns: '1fr 1fr 1fr 1fr auto auto' }}>
+            <select 
+              value={locationId} 
+              onChange={e => onLocationChange(e.target.value)}
+              style={{
+                background: '#0d1117',
+                border: '1px solid #262b34',
+                color: '#d1d5db',
+                padding: '10px 12px',
+                borderRadius: '6px',
+                fontSize: '14px'
+              }}
+            >
+              <option value="">Location…</option>
+              {locations.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
+            </select>
+            <select 
+              value={productId} 
+              onChange={e => setProductId(e.target.value)}
+              style={{
+                background: '#0d1117',
+                border: '1px solid #262b34',
+                color: '#d1d5db',
+                padding: '10px 12px',
+                borderRadius: '6px',
+                fontSize: '14px'
+              }}
+            >
+              <option value="">Product…</option>
+              {products.map(p => <option key={p.id} value={p.id}>{p.sku} — {p.name}</option>)}
+            </select>
+            <select 
+              value={binId} 
+              onChange={e => setBinId(e.target.value)}
+              style={{
+                background: '#0d1117',
+                border: '1px solid #262b34',
+                color: '#d1d5db',
+                padding: '10px 12px',
+                borderRadius: '6px',
+                fontSize: '14px'
+              }}
+            >
+              <option value="">Bin…</option>
+              {bins.map(b => <option key={b.id} value={b.id}>{b.code}</option>)}
+            </select>
+            <input 
+              type="number" 
+              placeholder="Qty" 
+              value={qty} 
+              onChange={e => setQty(e.target.value)}
+              style={{
+                background: '#0d1117',
+                border: '1px solid #262b34',
+                color: '#d1d5db',
+                padding: '10px 12px',
+                borderRadius: '6px',
+                fontSize: '14px'
+              }}
+            />
             <button 
               onClick={receive}
               style={{
@@ -466,8 +513,7 @@ if (sortConfig.key === 'qty') {//sorts with numbers
                 borderRadius: '6px',
                 cursor: 'pointer',
                 fontWeight: '600',
-                fontSize: '14px',
-                flex: 1
+                fontSize: '14px'
               }}
             >
               Receive
@@ -482,15 +528,13 @@ if (sortConfig.key === 'qty') {//sorts with numbers
                 borderRadius: '6px',
                 cursor: 'pointer',
                 fontWeight: '600',
-                fontSize: '14px',
-                flex: 1
+                fontSize: '14px'
               }}
             >
               Ship
             </button>
           </div>
-        </div>
-      </section>
+        </section>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
         <h2 style={{ margin: 0, color: '#d1d5db' }}>Current Stock</h2>
@@ -592,18 +636,29 @@ if (sortConfig.key === 'qty') {//sorts with numbers
                     </td>
                   )}
                   <td style={{ color: '#d1d5db' }}>{row.location_name}</td>
-                  <td style={{ color: '#d1d5db' }}>{row.sku}</td>
-                  <td style={{ fontWeight: '500', color: '#d1d5db' }}>{row.product_name}</td>
-                  <td style={{ color: '#9ca3af', fontSize: '14px' }}>{row.description || '—'}</td>
-                  <td style={{ color: '#d1d5db' }}>{row.unit}</td>
-                  <td style={{ color: '#d1d5db' }}>{row.bin_code}</td>
-                  <td style={{ textAlign: 'right', fontWeight: '600', color: '#d1d5db' }}>{row.qty}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+                    <td style={{ color: '#d1d5db' }}>{row.sku}</td>
+                    <td 
+                      style={{ 
+                        fontWeight: '500', 
+                        color: '#6b7280', 
+                        cursor: 'pointer',
+                        textDecoration: 'underline'
+                      }}
+                      onClick={() => handleProductClick(row)}
+                      title="Click to view transaction history"
+                    >
+                      {row.product_name}
+                    </td>
+                    <td style={{ color: '#9ca3af', fontSize: '14px' }}>{row.description || '—'}</td>
+                    <td style={{ color: '#d1d5db' }}>{row.unit}</td>
+                    <td style={{ color: '#d1d5db' }}>{row.bin_code}</td>
+                    <td style={{ textAlign: 'right', fontWeight: '600', color: '#d1d5db' }}>{row.qty}</td>
+                  </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
 
       {searchTerm && (
         <div style={{ marginTop: 12, color: '#9ca3af', fontSize: '14px' }}>
@@ -613,13 +668,30 @@ if (sortConfig.key === 'qty') {//sorts with numbers
 
       {showAdminPanel && (
         <AdminPanel
+          user={user}
           onClose={() => setShowAdminPanel(false)}
           onUpdate={reloadAllData}
         />
       )}
-      {showActivityLogs && (
-        <ActivityLogs onClose={() => setShowActivityLogs(false)} />
-      )}
-    </div>
+        {showActivityLogs && (
+          <ActivityLogs onClose={() => setShowActivityLogs(false)} />
+        )}
+        {showProductHistory && selectedProduct && (
+          <ProductHistory
+            productId={selectedProduct.id}
+            productName={selectedProduct.name}
+            sku={selectedProduct.sku}
+            onClose={() => setShowProductHistory(false)}
+          />
+        )}
+        {showStockTransfer && (
+          <StockTransfer
+            user={user}
+            onClose={() => setShowStockTransfer(false)}
+            onUpdate={reloadAllData}
+          />
+        )}
+      </div>
+      </>
   );
 }

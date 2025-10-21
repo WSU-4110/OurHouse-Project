@@ -155,8 +155,8 @@ app.post('/transactions/ship', authRequired, roleRequired('Worker', 'Manager', '
   }
 }));
 
-// transfer
-app.post('/transactions/transfer', handle(async (req, res) => {
+//transfer
+app.post('/transactions/transfer', authRequired, roleRequired('Worker', 'Manager', 'Admin'), handle(async (req, res) => {
   const { productId, fromBinId, toBinId, qty, reference, user } = req.body;
   if (!productId || !fromBinId || !toBinId || fromBinId === toBinId || !qty || qty <= 0) {
     return res.status(400).json({ error: 'productId, fromBinId!=toBinId, positive qty required' });
@@ -188,7 +188,7 @@ app.post('/transactions/transfer', handle(async (req, res) => {
     await client.query(
       `INSERT INTO activity_logs(action_type, user_name, user_role, details)
       VALUES ($1, $2, $3, $4)`,
-      ['MOVE', user, req.user.role, JSON.stringify({ productId, binId, qty, reference })]
+      ['MOVE', user || req.user.name, req.user.role, JSON.stringify({ productId, fromBinId, toBinId, qty, reference })]
     );
     await client.query('commit');
     res.json({ ok: true });
@@ -254,21 +254,13 @@ app.delete('/admin/products/:id', authRequired, roleRequired('Manager', 'Admin')
   
   try {
     await client.query('BEGIN');
-    
-    //checks if product has stock
-    const { rows: stockCheck } = await client.query(
-      'SELECT COUNT(*) as count FROM stock_levels WHERE product_id = $1 AND qty > 0',
-      [id]
-    );
-    
-    if (Number(stockCheck[0].count) > 0) {
-      await client.query('ROLLBACK');
-      return res.status(400).json({ error: 'Cannot delete product with existing stock' });
-    }
-    
+
     //gets product info to log
     const { rows: product } = await client.query('SELECT * FROM products WHERE id = $1', [id]);
-    
+    if (product.length === 0) {
+      await client.query('ROLLBACK');
+      return res.status(404).json({ error: 'Product not found' });
+    }
     //deletes stock
     await client.query('DELETE FROM stock_levels WHERE product_id = $1', [id]);
     
@@ -401,6 +393,36 @@ app.get('/admin/logs', authRequired, roleRequired('Manager', 'Admin'), handle(as
   );
   
   res.json(rows);
+}));
+
+app.get('/products/:id/transactions', authRequired, handle(async (req, res) => {
+  const { id } = req.params;
+  const { rows } = await pool.query(`
+    SELECT 
+      st.*,
+      fb.code as from_bin_code,
+      tb.code as to_bin_code,
+      fl.name as from_location_name,
+      tl.name as to_location_name
+    FROM stock_transactions st
+    LEFT JOIN bins fb ON st.from_bin_id = fb.id
+    LEFT JOIN bins tb ON st.to_bin_id = tb.id
+    LEFT JOIN locations fl ON fb.location_id = fl.id
+    LEFT JOIN locations tl ON tb.location_id = tl.id
+    WHERE st.product_id = $1
+    ORDER BY st.occurred_at DESC
+    LIMIT 50
+  `, [id]);
+  res.json(rows);
+}));
+
+app.get('/stock/check/:productId/:binId', authRequired, handle(async (req, res) => {
+  const { productId, binId } = req.params;
+  const { rows } = await pool.query(
+    'SELECT qty FROM stock_levels WHERE product_id = $1 AND bin_id = $2',
+    [productId, binId]
+  );
+  res.json({ qty: rows[0]?.qty || 0 });
 }));
 
 const port = process.env.PORT || 3000;
