@@ -385,57 +385,6 @@ app.delete('/admin/bins/:id', authRequired, roleRequired('Manager', 'Admin'), ha
   }
 }));
 
-app.delete('/admin/stock/:productId/:binId', authRequired, roleRequired('Manager', 'Admin'), handle(async (req, res) => {
-  const { productId, binId } = req.params;
-  const client = await pool.connect();
-  
-  try {
-    await client.query('BEGIN');
-    
-    const { rows: stockInfo } = await client.query(
-      `SELECT sl.qty, p.sku, p.name, b.code as bin_code, l.name as location_name
-       FROM stock_levels sl
-       JOIN products p ON sl.product_id = p.id
-       JOIN bins b ON sl.bin_id = b.id
-       JOIN locations l ON b.location_id = l.id
-       WHERE sl.product_id = $1 AND sl.bin_id = $2`,
-      [productId, binId]
-    );
-    
-    if (stockInfo.length === 0) {
-      await client.query('ROLLBACK');
-      return res.status(404).json({ error: 'Stock not found' });
-    }
-    
-    await client.query(
-      'DELETE FROM stock_levels WHERE product_id = $1 AND bin_id = $2',
-      [productId, binId]
-    );
-    
-    await client.query(
-      `INSERT INTO activity_logs(action_type, user_name, user_role, details)
-       VALUES ($1, $2, $3, $4)`,
-      ['DELETE_STOCK', req.user.name, req.user.role, JSON.stringify({
-        productId,
-        binId,
-        sku: stockInfo[0].sku,
-        productName: stockInfo[0].name,
-        binCode: stockInfo[0].bin_code,
-        locationName: stockInfo[0].location_name,
-        qty: stockInfo[0].qty
-      })]
-    );
-    
-    await client.query('COMMIT');
-    res.json({ ok: true, message: 'Stock deleted from bin successfully' });
-  } catch (e) {
-    await client.query('ROLLBACK');
-    throw e;
-  } finally {
-    client.release();
-  }
-}));
-
 //activity logs
 app.get('/admin/logs', authRequired, roleRequired('Manager', 'Admin'), handle(async (req, res) => {
   const { limit = 100, offset = 0 } = req.query;
