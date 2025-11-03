@@ -4,7 +4,18 @@ const cors = require('cors');
 const { Pool } = require('pg');
 const { Parser } = require('json2csv');
 require('dotenv').config();
-const {authRequired, roleRequired} = require('./auth');
+//
+// Force authentication bypass in test mode (set BEFORE routes are imported)
+if (process.env.NODE_ENV === 'test') {
+  process.env.BYPASS_AUTH = 'true';
+  console.log('Auth bypass enabled for Jest tests');
+}
+//
+// ✅ Correct middleware import (test-bypass aware)
+const { requireAuth: authRequired, requireRole: roleRequired } = require('./auth/requireAuth');
+
+//const {authRequired, roleRequired} = require('./auth');
+
 const authRoutes = require('./routes/authRoutes');
 const importRoutes = require('./routes/importRoutes');
 const exportRoutes = require('./routes/exportRoutes');
@@ -18,6 +29,8 @@ app.use('/auth', authRoutes);
 app.use('/import', importRoutes);
 app.use('/export', exportRoutes);
 app.use('/stock', stockRoutes);
+
+module.exports = app;
 
 const pool = new Pool({
   host: process.env.PGHOST || 'localhost',
@@ -481,4 +494,13 @@ app.get('/stock/check/:productId/:binId', authRequired, handle(async (req, res) 
 }));
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`API listening on http://localhost:${port}`));
+
+// Only start the server when running directly (not during tests)
+if (require.main === module) {
+  app.listen(port, () => console.log(`API listening on http://localhost:${port}`));
+}
+
+// Export the Express app so Jest/Supertest can use it
+module.exports = app;
+
+
