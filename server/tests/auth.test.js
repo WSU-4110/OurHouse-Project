@@ -9,7 +9,7 @@ const {
   verifyToken,
   authRequired,
   roleRequired
-} = require('../auth');
+} = require('../src/auth');
 
 
 describe('Authentication Module Unit Tests', () => {
