@@ -9,7 +9,7 @@ jest.mock('pg', () => {
   return { Pool: mockPool };
 });
 
-jest.mock('../auth', () => ({
+jest.mock('../src/auth', () => ({
   authRequired: jest.fn((req, res, next) => {
     req.user = { id: 1, email: 'test@example.com', role: 'Admin' };
     next();
@@ -20,8 +20,8 @@ jest.mock('../auth', () => ({
 const request = require('supertest');
 const express = require('express');
 const { Pool } = require('pg');
-const exportRoutes = require('../routes/exportRoutes');
-const { authRequired, roleRequired } = require('../auth');
+const exportRoutes = require('../src/routes/exportRoutes');
+const { authRequired, roleRequired } = require('../src/auth');
 
 describe('Export Routes - CSV Export Functionality', () => {
   let app;
