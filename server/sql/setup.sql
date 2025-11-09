@@ -116,4 +116,15 @@ SELECT 'IN', p.id, b.id, 100, 'initial seed','seed'
 FROM products p, bins b
 WHERE p.sku='SKU-001' AND b.code='A1' AND b.location_id=1;
 
+
+-- Seed Tristan's application users (pre-hashed from bcrypt) (Pwd - Password)
+INSERT INTO users (id, email, name, role, password_hash)
+VALUES
+  (1, 'hp7234+viewer@wayne.edu',  'Tristan Sexton', 'Viewer',  '$2b$10$.P0nWBXCuwjhCIudnDSDj.3pBx43ubsyq.GBJW1piO3d/OP8WMJey'),
+  (2, 'hp7234+worker@wayne.edu',  'Tristan Sexton', 'Worker',  '$2b$10$O1Pj.UDXTTv1GZZHwr8/o.wBiOFexB.CWFsBz.ExsXKZ9hILQLAbK'),
+  (3, 'hp7234+manager@wayne.edu', 'Tristan Sexton', 'Manager', '$2b$10$GO3gG6tk9feyFqI0c7hhgewIR1iWb7MN7jKEidS3cmFhMdIOAvj0e'),
+  (4, 'hp7234+admin@wayne.edu',   'Tristan Sexton', 'Admin',   '$2b$10$fri0l287TDiZmzqd6/ZmyukSH/BjfSQBxV2iJayiSx1NLHu8ZEeZG')
+ON CONFLICT (email) DO NOTHING;
+
+
 /* execute query in pgAdmin */

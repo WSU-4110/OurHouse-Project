@@ -6,7 +6,9 @@ const multer = require("multer");
 const fs = require("fs");
 const csv = require("csv-parser");
 const { Pool } = require("pg");
-const { authRequired, roleRequired } = require("../auth");
+//const { authRequired, roleRequired } = require("../auth");
+const { requireAuth: authRequired, requireRole: roleRequired } = require("../auth/requireAuth");
+
 
 const router = express.Router();
 const upload = multer({ dest: "uploads/" });
@@ -33,6 +35,14 @@ router.post(
         // Stop if no file is provided
         if (!req.file) return res.status(400).json({ error: "No file uploaded" });
 
+        // ✅ Wrong file type check (ensure uploaded file is a CSV)
+        if (!req.file.mimetype.includes("csv")) {
+            // Clean up uploaded file before responding
+            fs.unlink(req.file.path, () => {});
+            return res.status(400).json({ error: "Invalid file type. Please upload a CSV file." });
+        }
+
+
         const type = req.body.type || "shipment";
         const filePath = req.file.path;
         const client = await pool.connect();
@@ -51,6 +61,7 @@ router.post(
             // Abort if no rows found
             if (!rows.length)
                 return res.status(400).json({ error: "CSV appears empty" });
+
 
             let importedCount = 0;
             await client.query("BEGIN");
