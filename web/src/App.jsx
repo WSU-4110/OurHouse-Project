@@ -352,6 +352,30 @@ if (sortConfig.key === 'qty') {//sorts with numbers
             >
                 📥 Import
             </button>
+            {(user.role === 'Manager' || user.role === 'Admin') && (
+              <button
+                onClick={async () => {
+                  try {
+                    const res = await axios.post(`${API}/admin/send-digest`);
+                    window.showNotification?.('Email digest sent! Check console for preview URL', 'success');
+                  } catch (e) {
+                    window.showNotification?.('Failed to send email', 'error');
+                  }
+                }}
+                style={{
+                  background: '#374151',
+                  color: '#e5e7eb',
+                  padding: '10px 16px',
+                  border: '1px solid #4b5563',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontWeight: '600',
+                  fontSize: '14px'
+                }}
+              >
+                📧 Test Email
+              </button>
+            )}
           
           <button 
             onClick={handleLogout}
