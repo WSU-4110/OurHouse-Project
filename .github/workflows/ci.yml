@@ -1,0 +1,50 @@
+name: OurHouse Continuous Integration
+
+on:
+  push:
+    branches: [ main, development, tristan_unittest ]
+  pull_request:
+    branches: [ main, development, tristan_unittest ]
+
+jobs:
+  backend:
+    name: Backend (Jest Tests)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies (server)
+        working-directory: ./server
+        run: npm ci
+
+      - name: Run backend Jest tests
+        working-directory: ./server
+        run: npm test
+
+  frontend:
+    name: Frontend (React Build)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies (web)
+        working-directory: ./web
+        run: npm ci
+
+      - name: Build React frontend
+        working-directory: ./web
+        run: npm run build
