@@ -80,3 +80,28 @@ button:focus-visible {
     background-color: #0a0e13;
   }
 }
+
+/* Theme Overrides */
+body[data-theme="light"] {
+  background-color: #f3f4f6;
+  color: #1f2937;
+}
+
+body[data-theme="dark"] {
+  background-color: #0a0e13;
+  color: rgba(255, 255, 255, 0.87);
+}
+
+/* TEMPORARY QUICK LIGHT MODE FIX
+   This forces all dark UI elements into readable light-mode colors.
+   Does not affect dark mode and requires NO JSX changes.
+*/
+body[data-theme="light"] table,
+body[data-theme="light"] select,
+body[data-theme="light"] input,
+body[data-theme="light"] button,
+body[data-theme="light"] * {
+  background-color: #ffffff !important;
+  color: #000000 !important; /* Forces black text */
+  border-color: #d1d5dba0 !important;
+}

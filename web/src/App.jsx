@@ -10,6 +10,8 @@ import LowStockBanner from './LowStockBanner';
 import Notifications from './Notifications';
 import ProductHistory from './ProductHistory';
 import StockTransfer from './StockTransfer';
+import React from "react";
+
 
 const API = 'http://localhost:3000';
 
@@ -36,6 +38,17 @@ export default function App() {
   const [showProductHistory, setShowProductHistory] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showStockTransfer, setShowStockTransfer] = useState(false);
+
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
+
+  useEffect(() => {
+    document.body.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
+  };
 
   useEffect(() => {
     const savedToken = localStorage.getItem('token');
@@ -270,6 +283,24 @@ if (sortConfig.key === 'qty') {//sorts with numbers
   return (
     <>
     <Notifications />
+    <button
+        onClick={toggleTheme}
+        style={{
+          position: 'fixed',
+          top: 15,
+          right: 15,
+          background: 'transparent',
+          border: '1px solid #4b5563',
+          borderRadius: '6px',
+          fontSize: '20px',
+          padding: '6px 10px',
+          cursor: 'pointer',
+          zIndex: 999
+        }}
+        title="Toggle Light/Dark Mode"
+      >
+        {theme === 'dark' ? '☀️' : '🌙'}
+     </button>
      <div style={{ maxWidth: 1200, margin: '40px auto', fontFamily: 'system-ui, sans-serif', color: '#eee' }}>
 
       <LowStockBanner />
