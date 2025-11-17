@@ -1,0 +1,13 @@
+location,bin,product,qty,sku,description,unit
+Main Warehouse,A1,Apple,50,SKU-001,Fresh red apples,each
+Main Warehouse,A2,Banana,30,SKU-002,Yellow bananas,bunch
+Main Warehouse,A3,Grapes,45,SKU-003,Green seedless grapes,bag
+Secondary Storage,B1,Orange,20,SKU-004,Sweet oranges,bag
+Secondary Storage,B2,Peach,35,SKU-005,Juicy peaches,each
+Secondary Storage,B3,Plum,40,SKU-006,Dark purple plums,each
+Cold Room,C1,Strawberry,25,SKU-007,Organic red strawberries,box
+Cold Room,C2,Blueberry,15,SKU-008,Wild blueberries,box
+Cold Room,C3,Mango,60,SKU-009,Sweet and juicy mangoes,each
+Overflow,D1,Watermelon,10,SKU-010,Seedless watermelons,each
+Overflow,D2,Pineapple,12,SKU-011,Tropical pineapples,each
+Overflow,D3,Kiwi,18,SKU-012,Brown fuzzy kiwis,each
