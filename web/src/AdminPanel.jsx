@@ -10,8 +10,6 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
     productName: '',
     description: '',
     unit: 'each',
-    min_qty: 10,           // ADD THIS
-    lead_time_days: 0,     // ADD THIS
     locationName: '',
     selectedLocation: '',
     binCode: ''
@@ -49,8 +47,6 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
       productName: '',
       description: '',
       unit: 'each',
-      min_qty: 10,          // ADD THIS
-      lead_time_days: 0,    // ADD THIS
       locationName: '',
       selectedLocation: '',
       binCode: ''
@@ -70,9 +66,7 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
         sku: formData.sku,
         name: formData.productName,
         description: formData.description,
-        unit: formData.unit,
-        min_qty: formData.min_qty,          // ADD THIS
-        lead_time_days: formData.lead_time_days  // ADD THIS
+        unit: formData.unit
       });
       setSuccess('Product added successfully!');
       resetForm();
@@ -264,7 +258,7 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
                   value={formData.sku}
                   onChange={handleChange}
                   required
-                  placeholder="e.g., SKU-001"
+                  placeholder="e.g., SKU-003"
                   style={{
                     width: '100%',
                     padding: '12px 16px',
@@ -296,70 +290,6 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
                   onChange={handleChange}
                   required
                   placeholder="e.g., Premium Widget"
-                  style={{
-                    width: '100%',
-                    padding: '12px 16px',
-                    background: '#0d1117',
-                    border: '1px solid #262b34',
-                    borderRadius: '6px',
-                    color: '#d1d5db',
-                    fontSize: '15px',
-                    outline: 'none',
-                    boxSizing: 'border-box'
-                  }}
-                />
-              </div>
-
-              {/* NEW: Min Qty Field */}
-              <div style={{ marginBottom: '20px' }}>
-                <label style={{
-                  display: 'block',
-                  color: '#9ca3af',
-                  fontSize: '12px',
-                  fontWeight: '500',
-                  marginBottom: '8px'
-                }}>
-                  Minimum Quantity (for alerts) *
-                </label>
-                <input
-                  type="number"
-                  name="min_qty"
-                  value={formData.min_qty}
-                  onChange={handleChange}
-                  min="0"
-                  placeholder="10"
-                  style={{
-                    width: '100%',
-                    padding: '12px 16px',
-                    background: '#0d1117',
-                    border: '1px solid #262b34',
-                    borderRadius: '6px',
-                    color: '#d1d5db',
-                    fontSize: '15px',
-                    outline: 'none',
-                    boxSizing: 'border-box'
-                  }}
-                />
-              </div>
-
-              {/* NEW: Lead Time Field */}
-              <div style={{ marginBottom: '20px' }}>
-                <label style={{
-                  display: 'block',
-                  color: '#9ca3af',
-                  fontSize: '12px',
-                  fontWeight: '500',
-                  marginBottom: '8px'
-                }}>
-                  Lead Time (days)
-                </label>
-                <input
-                  type="number"
-                  name="lead_time_days"
-                  value={formData.lead_time_days}
-                  onChange={handleChange}
-                  min="0"
-                  placeholder="0"
                   style={{
                     width: '100%',
                     padding: '12px 16px',
