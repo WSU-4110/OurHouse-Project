@@ -1,0 +1,14 @@
+location,bin,product,qty,sku,description,unit
+Main Warehouse,A1,Apple,40,SKU-001,Stock adjusted,each
+Main Warehouse,A2,Banana,20,SKU-002,Stock adjusted,bunch
+Main Warehouse,A3,Grapes,30,SKU-003,Inventory correction,bag
+Secondary Storage,B1,Orange,50,SKU-004,Stock checked,bag
+Secondary Storage,B2,Peach,25,SKU-005,Stock adjusted,each
+Secondary Storage,B3,Plum,20,SKU-006,Stock updated,each
+Cold Room,C1,Strawberry,35,SKU-007,Inventory reconciled,box
+Cold Room,C2,Blueberry,18,SKU-008,Stock corrected,box
+Cold Room,C3,Mango,55,SKU-009,Updated from shipment,each
+Overflow,D1,Watermelon,12,SKU-010,Checked for accuracy,each
+Overflow,D2,Pineapple,10,SKU-011,Verified stock,each
+Overflow,D3,Kiwi,15,SKU-012,Recounted quantity,each
+Main,A1,Widget,100,SKU-001,Recount,Each
