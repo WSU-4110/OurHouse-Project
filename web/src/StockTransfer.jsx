@@ -149,30 +149,30 @@ export default function StockTransfer({ user, onClose, onUpdate }) {
       padding: '20px'
     }}>
       <div style={{
-        background: '#13171d',
+        background: '#242938',
         borderRadius: '8px',
         boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
         width: '100%',
         maxWidth: '600px',
         maxHeight: '90vh',
         overflow: 'auto',
-        border: '1px solid #262b34'
+        border: '1px solid #3d4559'
       }}>
         {/* Header */}
         <div style={{
           padding: '24px',
-          borderBottom: '1px solid #262b34',
+          borderBottom: '1px solid #3d4559',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center'
         }}>
-          <h2 style={{ margin: 0, color: '#d1d5db' }}>Transfer Stock</h2>
+          <h2 style={{ margin: 0, color: '#f0f4f8' }}>Transfer Stock</h2>
           <button
             onClick={onClose}
             style={{
               background: 'transparent',
               border: 'none',
-              color: '#9ca3af',
+              color: '#c5cdd8',
               fontSize: '24px',
               cursor: 'pointer',
               padding: '0',
@@ -190,7 +190,7 @@ export default function StockTransfer({ user, onClose, onUpdate }) {
             <div style={{ marginBottom: '20px' }}>
               <label style={{
                 display: 'block',
-                color: '#9ca3af',
+                color: '#c5cdd8',
                 fontSize: '12px',
                 fontWeight: '500',
                 marginBottom: '8px'
@@ -205,10 +205,10 @@ export default function StockTransfer({ user, onClose, onUpdate }) {
                 style={{
                   width: '100%',
                   padding: '12px 16px',
-                  background: '#0d1117',
-                  border: '1px solid #262b34',
+                  background: '#202634',
+                  border: '1px solid #3d4559',
                   borderRadius: '6px',
-                  color: '#d1d5db',
+                  color: '#f0f4f8',
                   fontSize: '15px',
                   outline: 'none',
                   cursor: 'pointer',
@@ -226,7 +226,7 @@ export default function StockTransfer({ user, onClose, onUpdate }) {
               <div>
                 <label style={{
                   display: 'block',
-                  color: '#9ca3af',
+                  color: '#c5cdd8',
                   fontSize: '12px',
                   fontWeight: '500',
                   marginBottom: '8px'
@@ -241,10 +241,10 @@ export default function StockTransfer({ user, onClose, onUpdate }) {
                   style={{
                     width: '100%',
                     padding: '12px 16px',
-                    background: '#0d1117',
-                    border: '1px solid #262b34',
+                    background: '#202634',
+                    border: '1px solid #3d4559',
                     borderRadius: '6px',
-                    color: '#d1d5db',
+                    color: '#f0f4f8',
                     fontSize: '15px',
                     outline: 'none',
                     cursor: 'pointer',
@@ -261,7 +261,7 @@ export default function StockTransfer({ user, onClose, onUpdate }) {
               <div>
                 <label style={{
                   display: 'block',
-                  color: '#9ca3af',
+                  color: '#c5cdd8',
                   fontSize: '12px',
                   fontWeight: '500',
                   marginBottom: '8px'
@@ -276,10 +276,10 @@ export default function StockTransfer({ user, onClose, onUpdate }) {
                   style={{
                     width: '100%',
                     padding: '12px 16px',
-                    background: '#0d1117',
-                    border: '1px solid #262b34',
+                    background: '#202634',
+                    border: '1px solid #3d4559',
                     borderRadius: '6px',
-                    color: '#d1d5db',
+                    color: '#f0f4f8',
                     fontSize: '15px',
                     outline: 'none',
                     cursor: 'pointer',
@@ -298,7 +298,7 @@ export default function StockTransfer({ user, onClose, onUpdate }) {
               <div>
                 <label style={{
                   display: 'block',
-                  color: '#9ca3af',
+                  color: '#c5cdd8',
                   fontSize: '12px',
                   fontWeight: '500',
                   marginBottom: '8px'
@@ -314,10 +314,10 @@ export default function StockTransfer({ user, onClose, onUpdate }) {
                   style={{
                     width: '100%',
                     padding: '12px 16px',
-                    background: '#0d1117',
-                    border: '1px solid #262b34',
+                    background: '#202634',
+                    border: '1px solid #3d4559',
                     borderRadius: '6px',
-                    color: '#d1d5db',
+                    color: '#f0f4f8',
                     fontSize: '15px',
                     outline: 'none',
                     cursor: 'pointer',
@@ -335,7 +335,7 @@ export default function StockTransfer({ user, onClose, onUpdate }) {
               <div>
                 <label style={{
                   display: 'block',
-                  color: '#9ca3af',
+                  color: '#c5cdd8',
                   fontSize: '12px',
                   fontWeight: '500',
                   marginBottom: '8px'
@@ -351,10 +351,10 @@ export default function StockTransfer({ user, onClose, onUpdate }) {
                   style={{
                     width: '100%',
                     padding: '12px 16px',
-                    background: '#0d1117',
-                    border: '1px solid #262b34',
+                    background: '#202634',
+                    border: '1px solid #3d4559',
                     borderRadius: '6px',
-                    color: '#d1d5db',
+                    color: '#f0f4f8',
                     fontSize: '15px',
                     outline: 'none',
                     cursor: 'pointer',
@@ -373,12 +373,12 @@ export default function StockTransfer({ user, onClose, onUpdate }) {
             <div style={{ marginBottom: '20px' }}>
               <label style={{
                 display: 'block',
-                color: '#9ca3af',
+                color: '#c5cdd8',
                 fontSize: '12px',
                 fontWeight: '500',
                 marginBottom: '8px'
               }}>
-                Quantity * {availableQty > 0 && <span style={{color: '#6b7280'}}>({availableQty} available)</span>}
+                Quantity * {availableQty > 0 && <span style={{color: '#8b95a8'}}>({availableQty} available)</span>}
               </label>
               <input
                 type="number"
@@ -391,10 +391,10 @@ export default function StockTransfer({ user, onClose, onUpdate }) {
                 style={{
                   width: '100%',
                   padding: '12px 16px',
-                  background: '#0d1117',
-                  border: '1px solid #262b34',
+                  background: '#202634',
+                  border: '1px solid #3d4559',
                   borderRadius: '6px',
-                  color: '#d1d5db',
+                  color: '#f0f4f8',
                   fontSize: '15px',
                   outline: 'none',
                   boxSizing: 'border-box'
@@ -405,7 +405,7 @@ export default function StockTransfer({ user, onClose, onUpdate }) {
             <div style={{ marginBottom: '24px' }}>
               <label style={{
                 display: 'block',
-                color: '#9ca3af',
+                color: '#c5cdd8',
                 fontSize: '12px',
                 fontWeight: '500',
                 marginBottom: '8px'
@@ -421,10 +421,10 @@ export default function StockTransfer({ user, onClose, onUpdate }) {
                 style={{
                   width: '100%',
                   padding: '12px 16px',
-                  background: '#0d1117',
-                  border: '1px solid #262b34',
+                  background: '#202634',
+                  border: '1px solid #3d4559',
                   borderRadius: '6px',
-                  color: '#d1d5db',
+                  color: '#f0f4f8',
                   fontSize: '15px',
                   outline: 'none',
                   boxSizing: 'border-box'
@@ -438,9 +438,9 @@ export default function StockTransfer({ user, onClose, onUpdate }) {
               style={{
                 width: '100%',
                 padding: '14px',
-                background: loading ? '#4b5563' : '#374151',
+                background: loading ? '#5a6578' : '#4a5568',
                 color: '#e5e7eb',
-                border: '1px solid #4b5563',
+                border: '1px solid #5a6578',
                 borderRadius: '6px',
                 fontSize: '16px',
                 fontWeight: '600',

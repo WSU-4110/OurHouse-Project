@@ -290,7 +290,7 @@ if (sortConfig.key === 'qty') {//sorts with numbers
           top: 15,
           right: 15,
           background: 'transparent',
-          border: '1px solid #4b5563',
+          border: '1px solid #5a6578',
           borderRadius: '6px',
           fontSize: '20px',
           padding: '6px 10px',
@@ -307,11 +307,11 @@ if (sortConfig.key === 'qty') {//sorts with numbers
 
       {/*heading on left, export button on right */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-        <h1 style={{ color: '#d1d5db' }}>OurHouse — Inventory</h1>
+        <h1 style={{ color: '#f0f4f8' }}>OurHouse — Inventory</h1>
 
         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
           {/* User info */}
-          <span style={{ color: '#9ca3af' }}>
+          <span style={{ color: '#c5cdd8' }}>
             {user.name} ({user.role})
           </span>
           {/* Admin button */}
@@ -321,10 +321,10 @@ if (sortConfig.key === 'qty') {//sorts with numbers
                     <button
                         onClick={() => setShowActivityLogs(true)}
                         style={{
-                            background: '#374151',
+                            background: '#4a5568',
                             color: '#e5e7eb',
                             padding: '8px 16px',
-                            border: '1px solid #4b5563',
+                            border: '1px solid #5a6578',
                             borderRadius: '6px',
                             cursor: 'pointer',
                             fontWeight: '600',
@@ -336,10 +336,10 @@ if (sortConfig.key === 'qty') {//sorts with numbers
                     <button
                         onClick={() => setShowAdminPanel(true)}
                         style={{
-                            background: '#374151',
+                            background: '#4a5568',
                             color: '#e5e7eb',
                             padding: '8px 16px',
-                            border: '1px solid #4b5563',
+                            border: '1px solid #5a6578',
                             borderRadius: '6px',
                             cursor: 'pointer',
                             fontWeight: '600',
@@ -355,10 +355,10 @@ if (sortConfig.key === 'qty') {//sorts with numbers
             <button
                 onClick={() => setShowExportMenu(true)}
                 style={{
-                    background: '#374151',
+                    background: '#4a5568',
                     color: '#e5e7eb',
                     padding: '8px 16px',
-                    border: '1px solid #4b5563',
+                    border: '1px solid #5a6578',
                     borderRadius: '6px',
                     cursor: 'pointer',
                     fontWeight: '600',
@@ -371,10 +371,10 @@ if (sortConfig.key === 'qty') {//sorts with numbers
             <button
                 onClick={() => setShowImportMenu(true)}
                 style={{
-                    background: '#374151',
+                    background: '#4a5568',
                     color: '#e5e7eb',
                     padding: '8px 16px',
-                    border: '1px solid #4b5563',
+                    border: '1px solid #5a6578',
                     borderRadius: '6px',
                     cursor: 'pointer',
                     fontWeight: '600',
@@ -394,10 +394,10 @@ if (sortConfig.key === 'qty') {//sorts with numbers
                   }
                 }}
                 style={{
-                  background: '#374151',
+                  background: '#4a5568',
                   color: '#e5e7eb',
                   padding: '10px 16px',
-                  border: '1px solid #4b5563',
+                  border: '1px solid #5a6578',
                   borderRadius: '6px',
                   cursor: 'pointer',
                   fontWeight: '600',
@@ -411,10 +411,10 @@ if (sortConfig.key === 'qty') {//sorts with numbers
           <button 
             onClick={handleLogout}
             style={{
-              background: '#1a1f27',
-              color: '#d1d5db',
+              background: '#2d3548',
+              color: '#f0f4f8',
               padding: '8px 16px',
-              border: '1px solid #374151',
+              border: '1px solid #4a5568',
               borderRadius: '6px',
               cursor: 'pointer',
               fontWeight: '600',
@@ -428,21 +428,21 @@ if (sortConfig.key === 'qty') {//sorts with numbers
       </div>
 
       {!!err && (
-        <div style={{ background: '#1a1414', padding: 10, margin: '10px 0', border: '1px solid #3a1c1c', borderRadius: '6px', color: '#fca5a5' }}>
+        <div style={{ background: '#3a1f1f', padding: 10, margin: '10px 0', border: '1px solid #5a2f2f', borderRadius: '6px', color: '#fca5a5' }}>
           {err}
         </div>
       )}
       
       <section style={{ marginBottom: 24 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <h2 style={{ color: '#d1d5db' }}>Receive / Ship</h2>
+            <h2 style={{ color: '#f0f4f8' }}>Receive / Ship</h2>
             <button
               onClick={() => setShowStockTransfer(true)}
               style={{
-                background: '#374151',
+                background: '#4a5568',
                 color: '#e5e7eb',
                 padding: '8px 16px',
-                border: '1px solid #4b5563',
+                border: '1px solid #5a6578',
                 borderRadius: '6px',
                 cursor: 'pointer',
                 fontWeight: '600',
@@ -457,9 +457,9 @@ if (sortConfig.key === 'qty') {//sorts with numbers
               value={locationId} 
               onChange={e => onLocationChange(e.target.value)}
               style={{
-                background: '#0d1117',
-                border: '1px solid #262b34',
-                color: '#d1d5db',
+                background: '#202634',
+                border: '1px solid #3d4559',
+                color: '#f0f4f8',
                 padding: '10px 12px',
                 borderRadius: '6px',
                 fontSize: '14px'
@@ -472,9 +472,9 @@ if (sortConfig.key === 'qty') {//sorts with numbers
               value={productId} 
               onChange={e => setProductId(e.target.value)}
               style={{
-                background: '#0d1117',
-                border: '1px solid #262b34',
-                color: '#d1d5db',
+                background: '#202634',
+                border: '1px solid #3d4559',
+                color: '#f0f4f8',
                 padding: '10px 12px',
                 borderRadius: '6px',
                 fontSize: '14px'
@@ -487,9 +487,9 @@ if (sortConfig.key === 'qty') {//sorts with numbers
               value={binId} 
               onChange={e => setBinId(e.target.value)}
               style={{
-                background: '#0d1117',
-                border: '1px solid #262b34',
-                color: '#d1d5db',
+                background: '#202634',
+                border: '1px solid #3d4559',
+                color: '#f0f4f8',
                 padding: '10px 12px',
                 borderRadius: '6px',
                 fontSize: '14px'
@@ -504,9 +504,9 @@ if (sortConfig.key === 'qty') {//sorts with numbers
               value={qty} 
               onChange={e => setQty(e.target.value)}
               style={{
-                background: '#0d1117',
-                border: '1px solid #262b34',
-                color: '#d1d5db',
+                background: '#202634',
+                border: '1px solid #3d4559',
+                color: '#f0f4f8',
                 padding: '10px 12px',
                 borderRadius: '6px',
                 fontSize: '14px'
@@ -515,10 +515,10 @@ if (sortConfig.key === 'qty') {//sorts with numbers
             <button 
               onClick={receive}
               style={{
-                background: '#374151',
+                background: '#4a5568',
                 color: '#e5e7eb',
                 padding: '10px 16px',
-                border: '1px solid #4b5563',
+                border: '1px solid #5a6578',
                 borderRadius: '6px',
                 cursor: 'pointer',
                 fontWeight: '600',
@@ -530,10 +530,10 @@ if (sortConfig.key === 'qty') {//sorts with numbers
             <button 
               onClick={ship}
               style={{
-                background: '#374151',
+                background: '#4a5568',
                 color: '#e5e7eb',
                 padding: '10px 16px',
-                border: '1px solid #4b5563',
+                border: '1px solid #5a6578',
                 borderRadius: '6px',
                 cursor: 'pointer',
                 fontWeight: '600',
@@ -546,7 +546,7 @@ if (sortConfig.key === 'qty') {//sorts with numbers
         </section>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-        <h2 style={{ margin: 0, color: '#d1d5db' }}>Current Stock</h2>
+        <h2 style={{ margin: 0, color: '#f0f4f8' }}>Current Stock</h2>
         <input
           type="text"
           placeholder="🔍 Search products, SKU, bin, description..."
@@ -554,10 +554,10 @@ if (sortConfig.key === 'qty') {//sorts with numbers
           onChange={e => setSearchTerm(e.target.value)}
           style={{
             padding: '10px 16px',
-            background: '#0d1117',
-            border: '1px solid #262b34',
+            background: '#202634',
+            border: '1px solid #3d4559',
             borderRadius: '6px',
-            color: '#d1d5db',
+            color: '#f0f4f8',
             width: '400px',
             fontSize: '14px'
           }}
@@ -565,64 +565,64 @@ if (sortConfig.key === 'qty') {//sorts with numbers
       </div>
 
       {loading ? (
-        <div style={{ color: '#9ca3af' }}>Loading…</div>
+        <div style={{ color: '#c5cdd8' }}>Loading…</div>
       ) : filteredStock.length === 0 ? (
-        <div style={{ color: '#9ca3af' }}>{searchTerm ? 'No results found.' : 'No stock yet.'}</div>
+        <div style={{ color: '#c5cdd8' }}>{searchTerm ? 'No results found.' : 'No stock yet.'}</div>
       ) : (
         <div style={{ 
           overflowX: 'auto',
           overflowY: 'auto', 
           maxHeight: '600px', 
-          border: '1px solid #262b34',
+          border: '1px solid #3d4559',
           borderRadius: '8px'
         }}>
-          <table width="100%" border="0" cellPadding="8" style={{ borderCollapse: 'collapse', background: '#13171d' }}>
+          <table width="100%" border="0" cellPadding="8" style={{ borderCollapse: 'collapse', background: '#242938' }}>
             <thead style={{ position: 'sticky', top: 0, zIndex: 10 }}>
-              <tr style={{ background: '#0d1117' }}>
+              <tr style={{ background: '#202634' }}>
                 {(user.role === 'Manager' || user.role === 'Admin') && (
-                  <th style={{ color: '#9ca3af', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid #262b34', padding: '12px' }}>
+                  <th style={{ color: '#c5cdd8', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid #3d4559', padding: '12px' }}>
                     Actions
                   </th>
                 )}
                 <th 
                   onClick={() => handleSort('location_name')}
-                  style={{ cursor: 'pointer', userSelect: 'none', color: '#9ca3af', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid #262b34', padding: '12px' }}
+                  style={{ cursor: 'pointer', userSelect: 'none', color: '#c5cdd8', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid #3d4559', padding: '12px' }}
                 >
                   Location {getSortIcon('location_name')}
                 </th>
                 <th
                   onClick={() => handleSort('sku')}
-                  style={{ cursor: 'pointer', userSelect: 'none', color: '#9ca3af', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid #262b34', padding: '12px' }}
+                  style={{ cursor: 'pointer', userSelect: 'none', color: '#c5cdd8', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid #3d4559', padding: '12px' }}
                 >
                   SKU {getSortIcon('sku')}
                 </th>
                 <th 
                   onClick={() => handleSort('product_name')}
-                  style={{ cursor: 'pointer', userSelect: 'none', color: '#9ca3af', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid #262b34', padding: '12px' }}
+                  style={{ cursor: 'pointer', userSelect: 'none', color: '#c5cdd8', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid #3d4559', padding: '12px' }}
                 >
                   Product {getSortIcon('product_name')}
                 </th>
                 <th 
                   onClick={() => handleSort('description')}
-                  style={{ cursor: 'pointer', userSelect: 'none', minWidth: '200px', color: '#9ca3af', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid #262b34', padding: '12px' }}
+                  style={{ cursor: 'pointer', userSelect: 'none', minWidth: '200px', color: '#c5cdd8', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid #3d4559', padding: '12px' }}
                 >
                   Description {getSortIcon('description')}
                 </th>
                 <th 
                   onClick={() => handleSort('unit')}
-                  style={{ cursor: 'pointer', userSelect: 'none', color: '#9ca3af', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid #262b34', padding: '12px' }}
+                  style={{ cursor: 'pointer', userSelect: 'none', color: '#c5cdd8', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid #3d4559', padding: '12px' }}
                 >
                   Unit {getSortIcon('unit')}
                 </th>
                 <th 
                   onClick={() => handleSort('bin_code')}
-                  style={{ cursor: 'pointer', userSelect: 'none', color: '#9ca3af', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid #262b34', padding: '12px' }}
+                  style={{ cursor: 'pointer', userSelect: 'none', color: '#c5cdd8', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid #3d4559', padding: '12px' }}
                 >
                   Bin {getSortIcon('bin_code')}
                 </th>
                 <th 
                   onClick={() => handleSort('qty')}
-                  style={{ textAlign: 'right', cursor: 'pointer', userSelect: 'none', color: '#9ca3af', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid #262b34', padding: '12px' }}
+                  style={{ textAlign: 'right', cursor: 'pointer', userSelect: 'none', color: '#c5cdd8', fontSize: '11px', textTransform: 'uppercase', borderBottom: '1px solid #3d4559', padding: '12px' }}
                 >
                   Qty {getSortIcon('qty')}
                 </th>
@@ -630,7 +630,7 @@ if (sortConfig.key === 'qty') {//sorts with numbers
             </thead>
             <tbody>
               {filteredStock.map(row => (
-                <tr key={`${row.product_id}-${row.bin_id}`} style={{ borderBottom: '1px solid #262b34' }}>
+                <tr key={`${row.product_id}-${row.bin_id}`} style={{ borderBottom: '1px solid #3d4559' }}>
                   {(user.role === 'Manager' || user.role === 'Admin') && (
                     <td>
                       <button
@@ -642,10 +642,10 @@ if (sortConfig.key === 'qty') {//sorts with numbers
                           row.location_name
                         )}
                         style={{
-                          background: '#1a1414',
+                          background: '#3a1f1f',
                           color: '#fca5a5',
                           padding: '6px 10px',
-                          border: '1px solid #3a1c1c',
+                          border: '1px solid #5a2f2f',
                           borderRadius: '4px',
                           cursor: 'pointer',
                           fontSize: '12px',
@@ -656,12 +656,12 @@ if (sortConfig.key === 'qty') {//sorts with numbers
                       </button>
                     </td>
                   )}
-                  <td style={{ color: '#d1d5db' }}>{row.location_name}</td>
-                    <td style={{ color: '#d1d5db' }}>{row.sku}</td>
+                  <td style={{ color: '#f0f4f8' }}>{row.location_name}</td>
+                    <td style={{ color: '#f0f4f8' }}>{row.sku}</td>
                     <td 
                       style={{ 
                         fontWeight: '500', 
-                        color: '#6b7280', 
+                        color: '#8b95a8', 
                         cursor: 'pointer',
                         textDecoration: 'underline'
                       }}
@@ -670,10 +670,10 @@ if (sortConfig.key === 'qty') {//sorts with numbers
                     >
                       {row.product_name}
                     </td>
-                    <td style={{ color: '#9ca3af', fontSize: '14px' }}>{row.description || '—'}</td>
-                    <td style={{ color: '#d1d5db' }}>{row.unit}</td>
-                    <td style={{ color: '#d1d5db' }}>{row.bin_code}</td>
-                    <td style={{ textAlign: 'right', fontWeight: '600', color: '#d1d5db' }}>{row.qty}</td>
+                    <td style={{ color: '#c5cdd8', fontSize: '14px' }}>{row.description || '—'}</td>
+                    <td style={{ color: '#f0f4f8' }}>{row.unit}</td>
+                    <td style={{ color: '#f0f4f8' }}>{row.bin_code}</td>
+                    <td style={{ textAlign: 'right', fontWeight: '600', color: '#f0f4f8' }}>{row.qty}</td>
                   </tr>
                   ))}
                 </tbody>
@@ -682,7 +682,7 @@ if (sortConfig.key === 'qty') {//sorts with numbers
           )}
 
       {searchTerm && (
-        <div style={{ marginTop: 12, color: '#9ca3af', fontSize: '14px' }}>
+        <div style={{ marginTop: 12, color: '#c5cdd8', fontSize: '14px' }}>
           Showing {filteredStock.length} of {stock.length} items
         </div>
       )}

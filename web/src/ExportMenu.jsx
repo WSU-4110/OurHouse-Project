@@ -33,7 +33,7 @@ export default function ExportMenu({ user, onClose }) {
         <div style={overlay}>
             <div style={panel}>
                 <div style={header}>
-                    <h2 style={{ margin: 0, color: "#d1d5db" }}>Export Options</h2>
+                    <h2 style={{ margin: 0, color: "#f0f4f8" }}>Export Options</h2>
                     <button onClick={onClose} style={closeBtn}>×</button>
                 </div>
 
@@ -54,7 +54,7 @@ export default function ExportMenu({ user, onClose }) {
 }
 
 const overlay = { position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 };
-const panel = { background: "#13171d", border: "1px solid #262b34", borderRadius: 8, width: 400 };
-const header = { display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16, borderBottom: "1px solid #262b34" };
-const closeBtn = { background: "transparent", border: "none", color: "#9ca3af", fontSize: 24, cursor: "pointer" };
-const btn = { display: "block", width: "100%", padding: "12px 16px", marginBottom: 10, background: "#374151", border: "1px solid #4b5563", color: "#e5e7eb", borderRadius: 6, fontWeight: 600, cursor: "pointer" };
+const panel = { background: "#242938", border: "1px solid #3d4559", borderRadius: 8, width: 400 };
+const header = { display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16, borderBottom: "1px solid #3d4559" };
+const closeBtn = { background: "transparent", border: "none", color: "#c5cdd8", fontSize: 24, cursor: "pointer" };
+const btn = { display: "block", width: "100%", padding: "12px 16px", marginBottom: 10, background: "#4a5568", border: "1px solid #5a6578", color: "#e5e7eb", borderRadius: 6, fontWeight: 600, cursor: "pointer" };

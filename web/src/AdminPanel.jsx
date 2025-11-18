@@ -146,30 +146,30 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
       padding: '20px'
     }}>
       <div style={{
-        background: '#13171d',
+        background: '#242938',
         borderRadius: '8px',
         boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
         width: '100%',
         maxWidth: '600px',
         maxHeight: '90vh',
         overflow: 'auto',
-        border: '1px solid #262b34'
+        border: '1px solid #3d4559'
       }}>
         {/* Header */}
         <div style={{
           padding: '24px',
-          borderBottom: '1px solid #262b34',
+          borderBottom: '1px solid #3d4559',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center'
         }}>
-          <h2 style={{ margin: 0, color: '#d1d5db' }}>Admin Panel</h2>
+          <h2 style={{ margin: 0, color: '#f0f4f8' }}>Admin Panel</h2>
           <button
             onClick={onClose}
             style={{
               background: 'transparent',
               border: 'none',
-              color: '#9ca3af',
+              color: '#c5cdd8',
               fontSize: '24px',
               cursor: 'pointer',
               padding: '0',
@@ -186,8 +186,8 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
           display: 'flex',
           gap: '8px',
           padding: '16px 24px',
-          background: '#0d1117',
-          borderBottom: '1px solid #262b34'
+          background: '#202634',
+          borderBottom: '1px solid #3d4559'
         }}>
           {tabs.map(tab => (
             <button
@@ -200,10 +200,10 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
               style={{
                 flex: 1,
                 padding: '12px',
-                border: '1px solid #262b34',
+                border: '1px solid #3d4559',
                 borderRadius: '6px',
-                background: activeTab === tab.id ? '#374151' : 'transparent',
-                color: activeTab === tab.id ? '#e5e7eb' : '#9ca3af',
+                background: activeTab === tab.id ? '#4a5568' : 'transparent',
+                color: activeTab === tab.id ? '#e5e7eb' : '#c5cdd8',
                 cursor: 'pointer',
                 fontWeight: '600',
                 fontSize: '14px',
@@ -219,8 +219,8 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
         <div style={{ padding: '24px' }}>
           {error && (
             <div style={{
-              background: '#1a1414',
-              border: '1px solid #3a1c1c',
+              background: '#3a1f1f',
+              border: '1px solid #5a2f2f',
               color: '#fca5a5',
               padding: '12px 16px',
               borderRadius: '6px',
@@ -251,7 +251,7 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
               <div style={{ marginBottom: '20px' }}>
                 <label style={{
                   display: 'block',
-                  color: '#9ca3af',
+                  color: '#c5cdd8',
                   fontSize: '12px',
                   fontWeight: '500',
                   marginBottom: '8px'
@@ -268,10 +268,10 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
                   style={{
                     width: '100%',
                     padding: '12px 16px',
-                    background: '#0d1117',
-                    border: '1px solid #262b34',
+                    background: '#202634',
+                    border: '1px solid #3d4559',
                     borderRadius: '6px',
-                    color: '#d1d5db',
+                    color: '#f0f4f8',
                     fontSize: '15px',
                     outline: 'none',
                     boxSizing: 'border-box'
@@ -282,7 +282,7 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
               <div style={{ marginBottom: '20px' }}>
                 <label style={{
                   display: 'block',
-                  color: '#9ca3af',
+                  color: '#c5cdd8',
                   fontSize: '12px',
                   fontWeight: '500',
                   marginBottom: '8px'
@@ -299,10 +299,10 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
                   style={{
                     width: '100%',
                     padding: '12px 16px',
-                    background: '#0d1117',
-                    border: '1px solid #262b34',
+                    background: '#202634',
+                    border: '1px solid #3d4559',
                     borderRadius: '6px',
-                    color: '#d1d5db',
+                    color: '#f0f4f8',
                     fontSize: '15px',
                     outline: 'none',
                     boxSizing: 'border-box'
@@ -314,7 +314,7 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
               <div style={{ marginBottom: '20px' }}>
                 <label style={{
                   display: 'block',
-                  color: '#9ca3af',
+                  color: '#c5cdd8',
                   fontSize: '12px',
                   fontWeight: '500',
                   marginBottom: '8px'
@@ -331,10 +331,10 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
                   style={{
                     width: '100%',
                     padding: '12px 16px',
-                    background: '#0d1117',
-                    border: '1px solid #262b34',
+                    background: '#202634',
+                    border: '1px solid #3d4559',
                     borderRadius: '6px',
-                    color: '#d1d5db',
+                    color: '#f0f4f8',
                     fontSize: '15px',
                     outline: 'none',
                     boxSizing: 'border-box'
@@ -346,7 +346,7 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
               <div style={{ marginBottom: '20px' }}>
                 <label style={{
                   display: 'block',
-                  color: '#9ca3af',
+                  color: '#c5cdd8',
                   fontSize: '12px',
                   fontWeight: '500',
                   marginBottom: '8px'
@@ -363,10 +363,10 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
                   style={{
                     width: '100%',
                     padding: '12px 16px',
-                    background: '#0d1117',
-                    border: '1px solid #262b34',
+                    background: '#202634',
+                    border: '1px solid #3d4559',
                     borderRadius: '6px',
-                    color: '#d1d5db',
+                    color: '#f0f4f8',
                     fontSize: '15px',
                     outline: 'none',
                     boxSizing: 'border-box'
@@ -377,7 +377,7 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
               <div style={{ marginBottom: '20px' }}>
                 <label style={{
                   display: 'block',
-                  color: '#9ca3af',
+                  color: '#c5cdd8',
                   fontSize: '12px',
                   fontWeight: '500',
                   marginBottom: '8px'
@@ -393,10 +393,10 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
                   style={{
                     width: '100%',
                     padding: '12px 16px',
-                    background: '#0d1117',
-                    border: '1px solid #262b34',
+                    background: '#202634',
+                    border: '1px solid #3d4559',
                     borderRadius: '6px',
-                    color: '#d1d5db',
+                    color: '#f0f4f8',
                     fontSize: '15px',
                     outline: 'none',
                     resize: 'vertical',
@@ -409,7 +409,7 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
               <div style={{ marginBottom: '24px' }}>
                 <label style={{
                   display: 'block',
-                  color: '#9ca3af',
+                  color: '#c5cdd8',
                   fontSize: '12px',
                   fontWeight: '500',
                   marginBottom: '8px'
@@ -424,10 +424,10 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
                   style={{
                     width: '100%',
                     padding: '12px 16px',
-                    background: '#0d1117',
-                    border: '1px solid #262b34',
+                    background: '#202634',
+                    border: '1px solid #3d4559',
                     borderRadius: '6px',
-                    color: '#d1d5db',
+                    color: '#f0f4f8',
                     fontSize: '15px',
                     outline: 'none',
                     cursor: 'pointer',
@@ -450,9 +450,9 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
                 style={{
                   width: '100%',
                   padding: '14px',
-                  background: loading ? '#4b5563' : '#374151',
+                  background: loading ? '#5a6578' : '#4a5568',
                   color: '#e5e7eb',
-                  border: '1px solid #4b5563',
+                  border: '1px solid #5a6578',
                   borderRadius: '6px',
                   fontSize: '16px',
                   fontWeight: '600',
@@ -470,7 +470,7 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
               <div style={{ marginBottom: '24px' }}>
                 <label style={{
                   display: 'block',
-                  color: '#9ca3af',
+                  color: '#c5cdd8',
                   fontSize: '12px',
                   fontWeight: '500',
                   marginBottom: '8px'
@@ -487,10 +487,10 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
                   style={{
                     width: '100%',
                     padding: '12px 16px',
-                    background: '#0d1117',
-                    border: '1px solid #262b34',
+                    background: '#202634',
+                    border: '1px solid #3d4559',
                     borderRadius: '6px',
-                    color: '#d1d5db',
+                    color: '#f0f4f8',
                     fontSize: '15px',
                     outline: 'none',
                     boxSizing: 'border-box'
@@ -504,9 +504,9 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
                 style={{
                   width: '100%',
                   padding: '14px',
-                  background: loading ? '#4b5563' : '#374151',
+                  background: loading ? '#5a6578' : '#4a5568',
                   color: '#e5e7eb',
-                  border: '1px solid #4b5563',
+                  border: '1px solid #5a6578',
                   borderRadius: '6px',
                   fontSize: '16px',
                   fontWeight: '600',
@@ -524,7 +524,7 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
               <div style={{ marginBottom: '20px' }}>
                 <label style={{
                   display: 'block',
-                  color: '#9ca3af',
+                  color: '#c5cdd8',
                   fontSize: '12px',
                   fontWeight: '500',
                   marginBottom: '8px'
@@ -539,10 +539,10 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
                   style={{
                     width: '100%',
                     padding: '12px 16px',
-                    background: '#0d1117',
-                    border: '1px solid #262b34',
+                    background: '#202634',
+                    border: '1px solid #3d4559',
                     borderRadius: '6px',
-                    color: '#d1d5db',
+                    color: '#f0f4f8',
                     fontSize: '15px',
                     outline: 'none',
                     cursor: 'pointer',
@@ -559,7 +559,7 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
               <div style={{ marginBottom: '24px' }}>
                 <label style={{
                   display: 'block',
-                  color: '#9ca3af',
+                  color: '#c5cdd8',
                   fontSize: '12px',
                   fontWeight: '500',
                   marginBottom: '8px'
@@ -576,10 +576,10 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
                   style={{
                     width: '100%',
                     padding: '12px 16px',
-                    background: '#0d1117',
-                    border: '1px solid #262b34',
+                    background: '#202634',
+                    border: '1px solid #3d4559',
                     borderRadius: '6px',
-                    color: '#d1d5db',
+                    color: '#f0f4f8',
                     fontSize: '15px',
                     outline: 'none',
                     boxSizing: 'border-box'
@@ -593,9 +593,9 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
                 style={{
                   width: '100%',
                   padding: '14px',
-                  background: loading || !formData.selectedLocation ? '#4b5563' : '#374151',
+                  background: loading || !formData.selectedLocation ? '#5a6578' : '#4a5568',
                   color: '#e5e7eb',
-                  border: '1px solid #4b5563',
+                  border: '1px solid #5a6578',
                   borderRadius: '6px',
                   fontSize: '16px',
                   fontWeight: '600',

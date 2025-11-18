@@ -1,18 +1,18 @@
 /* OurHouse inventory polish */
 :root{
-  --bg-1:#0a0e13;     /* page */
-  --bg-2:#13171d;     /* cards */
-  --bg-3:#1a1f27;     /* hovers/rows */
-  --text-1:#d1d5db;   /* primary text */
-  --text-2:#9ca3af;   /* secondary text */
-  --border:#262b34;
-  --accent:#6b7280;   
-  --accent-2:#4b5563; 
-  --danger:#991b1b;
-  --ok:#065f46;
+  --bg-1:#1a1f2e;
+  --bg-2:#242938;
+  --bg-3:#2d3548; 
+  --text-1:#f0f4f8; 
+  --text-2:#c5cdd8; 
+  --border:#3d4559; 
+  --accent:#8b95a8;  
+  --accent-2:#6b7789;
+  --danger:#ef4444;
+  --ok:#10b981;
   --radius:8px;
-  --shadow:0 4px 12px rgba(0,0,0,.4);
-  --ring:0 0 0 2px rgba(107,114,128,.25);
+  --shadow:0 4px 16px rgba(0,0,0,.3);
+  --ring:0 0 0 3px rgba(139,149,168,.3);
 }
 
 * { box-sizing:border-box }
@@ -82,7 +82,7 @@ label{
 }
 .input, .select{
   width:100%;
-  background:#0d1117;
+  background:#202634;
   border:1px solid var(--border);
   color:var(--text-1);
   padding:12px 12px;
@@ -90,7 +90,7 @@ label{
   outline:none;
   transition:.15s border, .15s box-shadow;
 }
-.input::placeholder{ color:#6b7280 }
+.input::placeholder{ color:#8b95a8 }
 .input:focus, .select:focus{
   border-color:var(--accent);
   box-shadow:var(--ring);
@@ -107,13 +107,13 @@ label{
 .btn:active{ background:#181d24 }
 
 .btn-primary{
-  background:#374151;
-  border-color:#4b5563; 
+  background:#4a5568;
+  border-color:#5a6578; 
   color:#e5e7eb;
 }
-.btn-primary:hover{ background:#4b5563 }
+.btn-primary:hover{ background:#5a6578 }
 .btn-danger{
-  background:#1a1414; border-color:#3a1c1c; color:#fca5a5;
+  background:#3a1f1f; border-color:#5a2f2f; color:#fca5a5;
 }
 .btn-danger:hover{ background:#231818; border-color:#5a2424 }
 
@@ -126,8 +126,8 @@ label{
 }
 .table thead th{
   position:sticky; top:0; z-index:1;
-  background: #0d1117;
-  color:#9ca3af;
+  background: #202634;
+  color:#c5cdd8;
   text-transform:uppercase; font-size:11px; letter-spacing:.06em;
   border-bottom:1px solid var(--border);
   padding:12px 14px;

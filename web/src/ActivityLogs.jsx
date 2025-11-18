@@ -26,16 +26,16 @@ export default function ActivityLogs({ onClose }) {
 
   const getActionColor = (action) => {
     const colors = {
-      'RECEIVE': '#6b7280',
-      'SHIP': '#6b7280',
-      'DELETE_PRODUCT': '#991b1b',
-      'DELETE_LOCATION': '#991b1b',
-      'DELETE_BIN': '#991b1b',
-      'ADD_PRODUCT': '#374151',
-      'ADD_LOCATION': '#374151',
-      'ADD_BIN': '#374151'
+      'RECEIVE': '#8b95a8',
+      'SHIP': '#8b95a8',
+      'DELETE_PRODUCT': '#ef4444',
+      'DELETE_LOCATION': '#ef4444',
+      'DELETE_BIN': '#ef4444',
+      'ADD_PRODUCT': '#4a5568',
+      'ADD_LOCATION': '#4a5568',
+      'ADD_BIN': '#4a5568'
     };
-    return colors[action] || '#4b5563';
+    return colors[action] || '#5a6578';
   };
 
   const getActionIcon = (action) => {
@@ -108,28 +108,28 @@ export default function ActivityLogs({ onClose }) {
       padding: '20px'
     }}>
       <div style={{
-        background: '#13171d',
+        background: '#242938',
         borderRadius: '8px',
         boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
         width: '100%',
         maxWidth: '1000px',
         maxHeight: '90vh',
         overflow: 'hidden',
-        border: '1px solid #262b34',
+        border: '1px solid #3d4559',
         display: 'flex',
         flexDirection: 'column'
       }}>
         {/* Header */}
         <div style={{
           padding: '24px',
-          borderBottom: '1px solid #262b34',
+          borderBottom: '1px solid #3d4559',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center'
         }}>
           <div>
-            <h2 style={{ margin: 0, color: '#d1d5db' }}>Activity Logs</h2>
-            <p style={{ margin: '4px 0 0 0', color: '#9ca3af', fontSize: '14px' }}>
+            <h2 style={{ margin: 0, color: '#f0f4f8' }}>Activity Logs</h2>
+            <p style={{ margin: '4px 0 0 0', color: '#c5cdd8', fontSize: '14px' }}>
               Showing {filteredLogs.length} of {logs.length} activities
             </p>
           </div>
@@ -138,7 +138,7 @@ export default function ActivityLogs({ onClose }) {
             style={{
               background: 'transparent',
               border: 'none',
-              color: '#9ca3af',
+              color: '#c5cdd8',
               fontSize: '24px',
               cursor: 'pointer',
               padding: '0',
@@ -153,8 +153,8 @@ export default function ActivityLogs({ onClose }) {
         {/* Filter */}
         <div style={{
           padding: '16px 24px',
-          background: '#0d1117',
-          borderBottom: '1px solid #262b34',
+          background: '#202634',
+          borderBottom: '1px solid #3d4559',
           display: 'flex',
           gap: '8px'
         }}>
@@ -164,10 +164,10 @@ export default function ActivityLogs({ onClose }) {
               onClick={() => setFilter(f)}
               style={{
                 padding: '8px 16px',
-                border: '1px solid #262b34',
+                border: '1px solid #3d4559',
                 borderRadius: '6px',
-                background: filter === f ? '#374151' : 'transparent',
-                color: filter === f ? '#e5e7eb' : '#9ca3af',
+                background: filter === f ? '#4a5568' : 'transparent',
+                color: filter === f ? '#e5e7eb' : '#c5cdd8',
                 cursor: 'pointer',
                 fontSize: '14px',
                 textTransform: 'capitalize',
@@ -186,11 +186,11 @@ export default function ActivityLogs({ onClose }) {
           flex: 1
         }}>
           {loading ? (
-            <div style={{ textAlign: 'center', color: '#9ca3af', padding: '40px' }}>
+            <div style={{ textAlign: 'center', color: '#c5cdd8', padding: '40px' }}>
               Loading logs...
             </div>
           ) : filteredLogs.length === 0 ? (
-            <div style={{ textAlign: 'center', color: '#9ca3af', padding: '40px' }}>
+            <div style={{ textAlign: 'center', color: '#c5cdd8', padding: '40px' }}>
               No activity logs found
             </div>
           ) : (
@@ -199,8 +199,8 @@ export default function ActivityLogs({ onClose }) {
                 <div
                   key={log.id}
                   style={{
-                    background: '#0d1117',
-                    border: '1px solid #262b34',
+                    background: '#202634',
+                    border: '1px solid #3d4559',
                     borderRadius: '6px',
                     padding: '16px',
                     display: 'flex',
@@ -235,20 +235,20 @@ export default function ActivityLogs({ onClose }) {
                       >
                         {log.action_type.replace(/_/g, ' ')}
                       </span>
-                      <span style={{ color: '#6b7280', fontSize: '12px' }}>•</span>
-                      <span style={{ color: '#d1d5db', fontSize: '14px' }}>
+                      <span style={{ color: '#8b95a8', fontSize: '12px' }}>•</span>
+                      <span style={{ color: '#f0f4f8', fontSize: '14px' }}>
                         {log.user_name}
                       </span>
-                      <span style={{ color: '#6b7280', fontSize: '12px' }}>
+                      <span style={{ color: '#8b95a8', fontSize: '12px' }}>
                         ({log.user_role})
                       </span>
                     </div>
                     
-                    <div style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '4px' }}>
+                    <div style={{ color: '#c5cdd8', fontSize: '13px', marginBottom: '4px' }}>
                       {formatDetails(log.action_type, log.details)}
                     </div>
                     
-                    <div style={{ color: '#6b7280', fontSize: '12px' }}>
+                    <div style={{ color: '#8b95a8', fontSize: '12px' }}>
                       {formatDate(log.timestamp)}
                     </div>
                   </div>

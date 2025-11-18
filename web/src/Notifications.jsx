@@ -38,13 +38,13 @@ export default function Notifications() {
 
     switch (type) {
       case 'error':
-        return { ...base, background: '#1a1414', border: '1px solid #3a1c1c', color: '#fca5a5' };
+        return { ...base, background: '#3a1f1f', border: '1px solid #5a2f2f', color: '#fca5a5' };
       case 'success':
         return { ...base, background: '#0f1e17', border: '1px solid #1a3a2a', color: '#86efac' };
       case 'warning':
         return { ...base, background: '#1a1508', border: '1px solid #3a2f0a', color: '#fcd34d' };
       default:
-        return { ...base, background: '#0d1117', border: '1px solid #262b34', color: '#9ca3af' };
+        return { ...base, background: '#202634', border: '1px solid #3d4559', color: '#c5cdd8' };
     }
   };
 

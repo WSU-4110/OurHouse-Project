@@ -41,7 +41,7 @@ export default function ImportMenu({ user, onClose, onImported }) {
         <div style={overlay}>
             <div style={panel}>
                 <div style={header}>
-                    <h2 style={{ margin: 0, color: "#d1d5db" }}>Import Options</h2>
+                    <h2 style={{ margin: 0, color: "#f0f4f8" }}>Import Options</h2>
                     <button onClick={onClose} style={closeBtn}>×</button>
                 </div>
 
@@ -53,7 +53,7 @@ export default function ImportMenu({ user, onClose, onImported }) {
                         {isManagerPlus && <option value="catalog">New Product Upload</option>}
                     </select>
 
-                    <input type="file" accept=".csv" onChange={(e) => setFile(e.target.files?.[0] || null)} style={{ marginTop: 16, color: "#d1d5db" }} />
+                    <input type="file" accept=".csv" onChange={(e) => setFile(e.target.files?.[0] || null)} style={{ marginTop: 16, color: "#f0f4f8" }} />
 
                     <div style={footerBtns}>
                         <button onClick={onClose} style={btnSecondary}>Cancel</button>
@@ -68,11 +68,11 @@ export default function ImportMenu({ user, onClose, onImported }) {
 }
 
 const overlay = { position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 };
-const panel = { background: "#13171d", border: "1px solid #262b34", borderRadius: 8, width: 480 };
-const header = { display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16, borderBottom: "1px solid #262b34" };
-const closeBtn = { background: "transparent", border: "none", color: "#9ca3af", fontSize: 24, cursor: "pointer" };
-const label = { display: "block", color: "#9ca3af", fontSize: 12, marginBottom: 6 };
-const select = { width: "100%", padding: "12px 14px", background: "#0d1117", color: "#d1d5db", border: "1px solid #262b34", borderRadius: 6, outline: "none" };
+const panel = { background: "#242938", border: "1px solid #3d4559", borderRadius: 8, width: 480 };
+const header = { display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16, borderBottom: "1px solid #3d4559" };
+const closeBtn = { background: "transparent", border: "none", color: "#c5cdd8", fontSize: 24, cursor: "pointer" };
+const label = { display: "block", color: "#c5cdd8", fontSize: 12, marginBottom: 6 };
+const select = { width: "100%", padding: "12px 14px", background: "#202634", color: "#f0f4f8", border: "1px solid #3d4559", borderRadius: 6, outline: "none" };
 const footerBtns = { marginTop: 20, display: "flex", justifyContent: "flex-end", gap: 10 };
-const btnSecondary = { background: "#1a1f27", color: "#d1d5db", border: "1px solid #374151", borderRadius: 6, padding: "10px 16px", fontWeight: 600, cursor: "pointer" };
-const btnPrimary = { background: "#374151", color: "#e5e7eb", border: "1px solid #4b5563", borderRadius: 6, padding: "10px 16px", fontWeight: 600, cursor: "pointer" };
+const btnSecondary = { background: "#1a1f27", color: "#f0f4f8", border: "1px solid #4a5568", borderRadius: 6, padding: "10px 16px", fontWeight: 600, cursor: "pointer" };
+const btnPrimary = { background: "#4a5568", color: "#e5e7eb", border: "1px solid #5a6578", borderRadius: 6, padding: "10px 16px", fontWeight: 600, cursor: "pointer" };

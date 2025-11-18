@@ -80,10 +80,10 @@ export default function ProductHistory({ productId, productName, sku, onClose })
 
   const getTransactionColor = (type) => {
     switch(type) {
-      case 'IN': return '#065f46';
-      case 'OUT': return '#991b1b';
-      case 'MOVE': return '#6b7280';
-      default: return '#4b5563';
+      case 'IN': return '#10b981';
+      case 'OUT': return '#ef4444';
+      case 'MOVE': return '#8b95a8';
+      default: return '#5a6578';
     }
   };
 
@@ -140,27 +140,27 @@ export default function ProductHistory({ productId, productName, sku, onClose })
       padding: '20px'
     }}>
       <div style={{
-        background: '#13171d',
+        background: '#242938',
         borderRadius: '8px',
         boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
         width: '100%',
         maxWidth: '800px',
         maxHeight: '90vh',
         overflow: 'hidden',
-        border: '1px solid #262b34',
+        border: '1px solid #3d4559',
         display: 'flex',
         flexDirection: 'column'
       }}>
         <div style={{
           padding: '24px',
-          borderBottom: '1px solid #262b34',
+          borderBottom: '1px solid #3d4559',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center'
         }}>
           <div>
-            <h2 style={{ margin: 0, color: '#d1d5db' }}>Transaction History</h2>
-            <p style={{ margin: '4px 0 0 0', color: '#9ca3af', fontSize: '14px' }}>
+            <h2 style={{ margin: 0, color: '#f0f4f8' }}>Transaction History</h2>
+            <p style={{ margin: '4px 0 0 0', color: '#c5cdd8', fontSize: '14px' }}>
               {sku} - {productName}
             </p>
           </div>
@@ -169,10 +169,10 @@ export default function ProductHistory({ productId, productName, sku, onClose })
               onClick={exportToCSV}
               disabled={loading || transactions.length === 0}
               style={{
-                background: '#374151',
+                background: '#4a5568',
                 color: '#e5e7eb',
                 padding: '8px 16px',
-                border: '1px solid #4b5563',
+                border: '1px solid #5a6578',
                 borderRadius: '6px',
                 cursor: loading || transactions.length === 0 ? 'not-allowed' : 'pointer',
                 fontWeight: '600',
@@ -187,7 +187,7 @@ export default function ProductHistory({ productId, productName, sku, onClose })
               style={{
                 background: 'transparent',
                 border: 'none',
-                color: '#9ca3af',
+                color: '#c5cdd8',
                 fontSize: '24px',
                 cursor: 'pointer',
                 padding: '0',
@@ -202,14 +202,14 @@ export default function ProductHistory({ productId, productName, sku, onClose })
 
         <div style={{
           padding: '16px 24px',
-          background: '#0d1117',
-          borderBottom: '1px solid #262b34',
+          background: '#202634',
+          borderBottom: '1px solid #3d4559',
           display: 'flex',
           gap: '12px',
           alignItems: 'center',
           flexWrap: 'wrap'
         }}>
-          <span style={{ color: '#9ca3af', fontSize: '14px', fontWeight: '600' }}>
+          <span style={{ color: '#c5cdd8', fontSize: '14px', fontWeight: '600' }}>
             Filter by Date:
           </span>
           <input
@@ -217,24 +217,24 @@ export default function ProductHistory({ productId, productName, sku, onClose })
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
             style={{
-              background: '#13171d',
-              border: '1px solid #262b34',
-              color: '#d1d5db',
+              background: '#242938',
+              border: '1px solid #3d4559',
+              color: '#f0f4f8',
               padding: '6px 12px',
               borderRadius: '6px',
               fontSize: '14px'
             }}
             placeholder="Start date"
           />
-          <span style={{ color: '#6b7280' }}>to</span>
+          <span style={{ color: '#8b95a8' }}>to</span>
           <input
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
             style={{
-              background: '#13171d',
-              border: '1px solid #262b34',
-              color: '#d1d5db',
+              background: '#242938',
+              border: '1px solid #3d4559',
+              color: '#f0f4f8',
               padding: '6px 12px',
               borderRadius: '6px',
               fontSize: '14px'
@@ -245,10 +245,10 @@ export default function ProductHistory({ productId, productName, sku, onClose })
             <button
               onClick={clearDateFilters}
               style={{
-                background: '#374151',
+                background: '#4a5568',
                 color: '#e5e7eb',
                 padding: '6px 12px',
-                border: '1px solid #4b5563',
+                border: '1px solid #5a6578',
                 borderRadius: '6px',
                 cursor: 'pointer',
                 fontSize: '14px',
@@ -258,7 +258,7 @@ export default function ProductHistory({ productId, productName, sku, onClose })
               Clear
             </button>
           )}
-          <span style={{ color: '#6b7280', fontSize: '13px', marginLeft: 'auto' }}>
+          <span style={{ color: '#8b95a8', fontSize: '13px', marginLeft: 'auto' }}>
             Showing {filteredTransactions.length} of {transactions.length} transactions
           </span>
         </div>
@@ -269,11 +269,11 @@ export default function ProductHistory({ productId, productName, sku, onClose })
           flex: 1
         }}>
           {loading ? (
-            <div style={{ textAlign: 'center', color: '#9ca3af', padding: '40px' }}>
+            <div style={{ textAlign: 'center', color: '#c5cdd8', padding: '40px' }}>
               Loading transactions...
             </div>
           ) : filteredTransactions.length === 0 ? (
-            <div style={{ textAlign: 'center', color: '#9ca3af', padding: '40px' }}>
+            <div style={{ textAlign: 'center', color: '#c5cdd8', padding: '40px' }}>
               {transactions.length === 0 
                 ? 'No transactions found for this product'
                 : 'No transactions match the selected date range'
@@ -285,8 +285,8 @@ export default function ProductHistory({ productId, productName, sku, onClose })
                 <div
                   key={transaction.id}
                   style={{
-                    background: '#0d1117',
-                    border: '1px solid #262b34',
+                    background: '#202634',
+                    border: '1px solid #3d4559',
                     borderRadius: '6px',
                     padding: '16px',
                     display: 'flex',
@@ -321,13 +321,13 @@ export default function ProductHistory({ productId, productName, sku, onClose })
                       >
                         {transaction.type === 'IN' ? 'RECEIVED' : transaction.type === 'OUT' ? 'SHIPPED' : 'MOVED'}
                       </span>
-                      <span style={{ color: '#6b7280', fontSize: '12px' }}>•</span>
-                      <span style={{ color: '#d1d5db', fontSize: '14px', fontWeight: '600' }}>
+                      <span style={{ color: '#8b95a8', fontSize: '12px' }}>•</span>
+                      <span style={{ color: '#f0f4f8', fontSize: '14px', fontWeight: '600' }}>
                         {transaction.qty} units
                       </span>
                     </div>
                     
-                    <div style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '4px' }}>
+                    <div style={{ color: '#c5cdd8', fontSize: '13px', marginBottom: '4px' }}>
                       {transaction.type === 'MOVE' 
                         ? `From ${transaction.from_bin_code} to ${transaction.to_bin_code}`
                         : transaction.type === 'IN' 
@@ -337,7 +337,7 @@ export default function ProductHistory({ productId, productName, sku, onClose })
                       {transaction.reference && ` • Ref: ${transaction.reference}`}
                     </div>
                     
-                    <div style={{ color: '#6b7280', fontSize: '12px' }}>
+                    <div style={{ color: '#8b95a8', fontSize: '12px' }}>
                       {formatDate(transaction.occurred_at)} • {transaction.performed_by}
                     </div>
                   </div>

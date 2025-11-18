@@ -80,10 +80,10 @@ function generateEmailHTML(items) {
       <html>
         <body style="font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px;">
           <div style="max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px;">
-            <h2 style="color: #065f46; margin-top: 0;">✅ All Stock Levels Normal</h2>
+            <h2 style="color: #10b981; margin-top: 0;">✅ All Stock Levels Normal</h2>
             <p>No items are currently below minimum stock thresholds.</p>
             <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;">
-            <p style="color: #6b7280; font-size: 12px;">
+            <p style="color: #8b95a8; font-size: 12px;">
               This is an automated daily digest from OurHouse Inventory Management System.
             </p>
           </div>
@@ -96,18 +96,18 @@ function generateEmailHTML(items) {
     <tr style="border-bottom: 1px solid #e5e7eb;">
       <td style="padding: 12px 8px; font-weight: 600; color: #1f2937;">${item.sku}</td>
       <td style="padding: 12px 8px;">${item.product_name}</td>
-      <td style="padding: 12px 8px; color: #6b7280;">${item.location_name} / ${item.bin_code}</td>
+      <td style="padding: 12px 8px; color: #8b95a8;">${item.location_name} / ${item.bin_code}</td>
       <td style="padding: 12px 8px; text-align: center;">
         <span style="background: ${item.qty < 5 ? '#fca5a5' : '#fcd34d'}; 
-                     color: ${item.qty < 5 ? '#991b1b' : '#78350f'}; 
+                     color: ${item.qty < 5 ? '#ef4444' : '#78350f'}; 
                      padding: 4px 12px; 
                      border-radius: 4px; 
                      font-weight: 600;">
           ${item.qty}
         </span>
       </td>
-      <td style="padding: 12px 8px; text-align: center; color: #6b7280;">${item.min_qty}</td>
-      <td style="padding: 12px 8px; text-align: center; color: #6b7280;">
+      <td style="padding: 12px 8px; text-align: center; color: #8b95a8;">${item.min_qty}</td>
+      <td style="padding: 12px 8px; text-align: center; color: #8b95a8;">
         ${item.lead_time_days > 0 ? `${item.lead_time_days} days` : 'N/A'}
       </td>
     </tr>
@@ -124,19 +124,19 @@ function generateEmailHTML(items) {
             </p>
           </div>
           
-          <p style="color: #4b5563; margin-bottom: 20px;">
+          <p style="color: #5a6578; margin-bottom: 20px;">
             The following items require attention and may need reordering:
           </p>
           
           <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
             <thead>
               <tr style="background: #f9fafb; border-bottom: 2px solid #e5e7eb;">
-                <th style="padding: 12px 8px; text-align: left; color: #6b7280; font-weight: 600; font-size: 12px; text-transform: uppercase;">SKU</th>
-                <th style="padding: 12px 8px; text-align: left; color: #6b7280; font-weight: 600; font-size: 12px; text-transform: uppercase;">Product</th>
-                <th style="padding: 12px 8px; text-align: left; color: #6b7280; font-weight: 600; font-size: 12px; text-transform: uppercase;">Location</th>
-                <th style="padding: 12px 8px; text-align: center; color: #6b7280; font-weight: 600; font-size: 12px; text-transform: uppercase;">Current Qty</th>
-                <th style="padding: 12px 8px; text-align: center; color: #6b7280; font-weight: 600; font-size: 12px; text-transform: uppercase;">Min Qty</th>
-                <th style="padding: 12px 8px; text-align: center; color: #6b7280; font-weight: 600; font-size: 12px; text-transform: uppercase;">Lead Time</th>
+                <th style="padding: 12px 8px; text-align: left; color: #8b95a8; font-weight: 600; font-size: 12px; text-transform: uppercase;">SKU</th>
+                <th style="padding: 12px 8px; text-align: left; color: #8b95a8; font-weight: 600; font-size: 12px; text-transform: uppercase;">Product</th>
+                <th style="padding: 12px 8px; text-align: left; color: #8b95a8; font-weight: 600; font-size: 12px; text-transform: uppercase;">Location</th>
+                <th style="padding: 12px 8px; text-align: center; color: #8b95a8; font-weight: 600; font-size: 12px; text-transform: uppercase;">Current Qty</th>
+                <th style="padding: 12px 8px; text-align: center; color: #8b95a8; font-weight: 600; font-size: 12px; text-transform: uppercase;">Min Qty</th>
+                <th style="padding: 12px 8px; text-align: center; color: #8b95a8; font-weight: 600; font-size: 12px; text-transform: uppercase;">Lead Time</th>
               </tr>
             </thead>
             <tbody>
@@ -152,7 +152,7 @@ function generateEmailHTML(items) {
           
           <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;">
           
-          <p style="color: #6b7280; font-size: 12px; margin: 0;">
+          <p style="color: #8b95a8; font-size: 12px; margin: 0;">
             This is an automated daily digest from OurHouse Inventory Management System.<br>
             Generated on ${new Date().toLocaleString('en-US', { 
               weekday: 'long', 

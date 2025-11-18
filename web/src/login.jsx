@@ -64,18 +64,18 @@ if (onLogin) {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      background: '#0a0e13',
+      background: '#1a1f2e',
       padding: '40px 20px',
       overflowY: 'auto'
     }}>
       <div style={{
-        background: '#13171d',
+        background: '#242938',
         borderRadius: '8px',
         boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
         width: '100%',
         maxWidth: '440px',
         padding: '48px 40px',
-        border: '1px solid #262b34'
+        border: '1px solid #3d4559'
       }}>
         {/* Logo/Header */}
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
@@ -88,12 +88,12 @@ if (onLogin) {
             margin: 0,
             fontSize: '28px',
             fontWeight: '700',
-            color: '#d1d5db',
+            color: '#f0f4f8',
             marginBottom: '8px'
           }}>OurHouse</h1>
           <p style={{
             margin: 0,
-            color: '#9ca3af',
+            color: '#c5cdd8',
             fontSize: '14px'
           }}>Inventory Management System</p>
         </div>
@@ -103,7 +103,7 @@ if (onLogin) {
           display: 'flex',
           gap: '8px',
           marginBottom: '32px',
-          background: '#0d1117',
+          background: '#202634',
           padding: '4px',
           borderRadius: '6px'
         }}>
@@ -114,8 +114,8 @@ if (onLogin) {
               padding: '10px',
               border: 'none',
               borderRadius: '4px',
-              background: isLogin ? '#374151' : 'transparent',
-              color: isLogin ? '#e5e7eb' : '#9ca3af',
+              background: isLogin ? '#4a5568' : 'transparent',
+              color: isLogin ? '#e5e7eb' : '#c5cdd8',
               cursor: 'pointer',
               fontWeight: '600',
               transition: 'all 0.2s'
@@ -130,8 +130,8 @@ if (onLogin) {
               padding: '10px',
               border: 'none',
               borderRadius: '4px',
-              background: !isLogin ? '#374151' : 'transparent',
-              color: !isLogin ? '#e5e7eb' : '#9ca3af',
+              background: !isLogin ? '#4a5568' : 'transparent',
+              color: !isLogin ? '#e5e7eb' : '#c5cdd8',
               cursor: 'pointer',
               fontWeight: '600',
               transition: 'all 0.2s'
@@ -144,8 +144,8 @@ if (onLogin) {
         {/* Error Message */}
         {error && (
           <div style={{
-            background: '#1a1414',
-            border: '1px solid #3a1c1c',
+            background: '#3a1f1f',
+            border: '1px solid #5a2f2f',
             color: '#fca5a5',
             padding: '12px 16px',
             borderRadius: '6px',
@@ -162,7 +162,7 @@ if (onLogin) {
             <div style={{ marginBottom: '20px' }}>
               <label style={{
                 display: 'block',
-                color: '#9ca3af',
+                color: '#c5cdd8',
                 fontSize: '12px',
                 fontWeight: '500',
                 marginBottom: '8px'
@@ -178,17 +178,17 @@ if (onLogin) {
                 style={{
                   width: '100%',
                   padding: '12px 16px',
-                  background: '#0d1117',
-                  border: '1px solid #262b34',
+                  background: '#202634',
+                  border: '1px solid #3d4559',
                   borderRadius: '6px',
-                  color: '#d1d5db',
+                  color: '#f0f4f8',
                   fontSize: '15px',
                   outline: 'none',
                   transition: 'border-color 0.2s',
                   boxSizing: 'border-box'
                 }}
-                onFocus={(e) => e.target.style.borderColor = '#6b7280'}
-                onBlur={(e) => e.target.style.borderColor = '#262b34'}
+                onFocus={(e) => e.target.style.borderColor = '#8b95a8'}
+                onBlur={(e) => e.target.style.borderColor = '#3d4559'}
               />
             </div>
           )}
@@ -196,7 +196,7 @@ if (onLogin) {
           <div style={{ marginBottom: '20px' }}>
             <label style={{
               display: 'block',
-              color: '#9ca3af',
+              color: '#c5cdd8',
               fontSize: '12px',
               fontWeight: '500',
               marginBottom: '8px'
@@ -212,24 +212,24 @@ if (onLogin) {
               style={{
                 width: '100%',
                 padding: '12px 16px',
-                background: '#0d1117',
-                border: '1px solid #262b34',
+                background: '#202634',
+                border: '1px solid #3d4559',
                 borderRadius: '6px',
-                color: '#d1d5db',
+                color: '#f0f4f8',
                 fontSize: '15px',
                 outline: 'none',
                 transition: 'border-color 0.2s',
                 boxSizing: 'border-box'
               }}
-              onFocus={(e) => e.target.style.borderColor = '#6b7280'}
-              onBlur={(e) => e.target.style.borderColor = '#262b34'}
+              onFocus={(e) => e.target.style.borderColor = '#8b95a8'}
+              onBlur={(e) => e.target.style.borderColor = '#3d4559'}
             />
           </div>
 
           <div style={{ marginBottom: !isLogin ? '20px' : '24px' }}>
             <label style={{
               display: 'block',
-              color: '#9ca3af',
+              color: '#c5cdd8',
               fontSize: '12px',
               fontWeight: '500',
               marginBottom: '8px'
@@ -246,17 +246,17 @@ if (onLogin) {
               style={{
                 width: '100%',
                 padding: '12px 16px',
-                background: '#0d1117',
-                border: '1px solid #262b34',
+                background: '#202634',
+                border: '1px solid #3d4559',
                 borderRadius: '6px',
-                color: '#d1d5db',
+                color: '#f0f4f8',
                 fontSize: '15px',
                 outline: 'none',
                 transition: 'border-color 0.2s',
                 boxSizing: 'border-box'
               }}
-              onFocus={(e) => e.target.style.borderColor = '#6b7280'}
-              onBlur={(e) => e.target.style.borderColor = '#262b34'}
+              onFocus={(e) => e.target.style.borderColor = '#8b95a8'}
+              onBlur={(e) => e.target.style.borderColor = '#3d4559'}
             />
           </div>
 
@@ -264,7 +264,7 @@ if (onLogin) {
             <div style={{marginBottom: '20px' }}>
               <label style={{
                 display: 'block',
-                color: '#9ca3af',
+                color: '#c5cdd8',
                 fontSize: '12px',
                 fontWeight: '500',
                 marginBottom: '8px'
@@ -279,10 +279,10 @@ if (onLogin) {
                 style={{
                   width: '100%',
                   padding: '12px 16px',
-                  background: '#0d1117',
-                  border: '1px solid #262b34',
+                  background: '#202634',
+                  border: '1px solid #3d4559',
                   borderRadius: '6px',
-                  color: '#d1d5db',
+                  color: '#f0f4f8',
                   fontSize: '15px',
                   outline: 'none',
                   cursor: 'pointer',
@@ -301,7 +301,7 @@ if (onLogin) {
             <div style={{ marginBottom: '24px' }}>
               <label style={{
                 display: 'block',
-                color: '#9ca3af',
+                color: '#c5cdd8',
                 fontSize: '12px',
                 fontWeight: '500',
                 marginBottom: '8px'
@@ -318,22 +318,22 @@ if (onLogin) {
                 style={{
                   width: '100%',
                   padding: '12px 16px',
-                  background: '#0d1117',
-                  border: '1px solid #262b34',
+                  background: '#202634',
+                  border: '1px solid #3d4559',
                   borderRadius: '6px',
-                  color: '#d1d5db',
+                  color: '#f0f4f8',
                   fontSize: '15px',
                   outline: 'none',
                   transition: 'border-color 0.2s',
                   boxSizing: 'border-box'
                 }}
-                onFocus={(e) => e.target.style.borderColor = '#6b7280'}
-                onBlur={(e) => e.target.style.borderColor = '#262b34'}
+                onFocus={(e) => e.target.style.borderColor = '#8b95a8'}
+                onBlur={(e) => e.target.style.borderColor = '#3d4559'}
               />
               <p style={{
                 margin: '8px 0 0 0',
                 fontSize: '12px',
-                color: '#6b7280'
+                color: '#8b95a8'
               }}>
                 Contact your administrator for the secret code
               </p>
@@ -346,9 +346,9 @@ if (onLogin) {
             style={{
               width: '100%',
               padding: '14px',
-              background: loading ? '#4b5563' : '#374151',
+              background: loading ? '#5a6578' : '#4a5568',
               color: '#e5e7eb',
-              border: '1px solid #4b5563',
+              border: '1px solid #5a6578',
               borderRadius: '6px',
               fontSize: '16px',
               fontWeight: '600',
@@ -358,10 +358,10 @@ if (onLogin) {
               marginBottom: needsSecretCode ? 0 : '0'
             }}
             onMouseEnter={(e) => {
-              if (!loading) e.target.style.background = '#4b5563';
+              if (!loading) e.target.style.background = '#5a6578';
             }}
             onMouseLeave={(e) => {
-              if (!loading) e.target.style.background = '#374151';
+              if (!loading) e.target.style.background = '#4a5568';
             }}
           >
             {loading ? 'Please wait...' : (isLogin ? 'Sign In' : 'Create Account')}
@@ -373,17 +373,17 @@ if (onLogin) {
           marginTop: '24px',
           textAlign: 'center',
           fontSize: '13px',
-          color: '#6b7280'
+          color: '#8b95a8'
         }}>
           {isLogin ? (
             <p style={{ margin: 0 }}>Need an account? <span
               onClick={() => setIsLogin(false)}
-              style={{ color: '#9ca3af', cursor: 'pointer', textDecoration: 'underline' }}
+              style={{ color: '#c5cdd8', cursor: 'pointer', textDecoration: 'underline' }}
             >Register here</span></p>
           ) : (
             <p style={{ margin: 0 }}>Already have an account? <span 
               onClick={() => setIsLogin(true)}
-              style={{ color: '#9ca3af', cursor: 'pointer', textDecoration: 'underline' }}
+              style={{ color: '#c5cdd8', cursor: 'pointer', textDecoration: 'underline' }}
             >Login here</span></p>
           )}
         </div>
