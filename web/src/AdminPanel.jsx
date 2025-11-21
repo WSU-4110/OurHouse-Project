@@ -20,10 +20,19 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const [locations, setLocations] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [deleteProductId, setDeleteProductId] = useState('');
+  const [deleteLocationId, setDeleteLocationId] = useState('');
+  const [deleteBinLocationId, setDeleteBinLocationId] = useState('');
+  const [deleteBinId, setDeleteBinId] = useState('');
+  const [binOptions, setBinOptions] = useState([]);
 
   useEffect(() => {
-    if (activeTab === 'bins') {
+    if (activeTab === 'bins' || activeTab === 'remove-location' || activeTab === 'remove-bin') {
       loadLocations();
+    }
+    if (activeTab === 'remove-product') {
+      loadProducts();
     }
   }, [activeTab]);
 
@@ -31,6 +40,28 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
     try {
       const { data } = await axios.get(`${API}/locations`);
       setLocations(data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const loadProducts = async () => {
+    try {
+      const { data } = await axios.get(`${API}/products`);
+      setProducts(data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const loadBinsForLocation = async (locationId) => {
+    if (!locationId) {
+      setBinOptions([]);
+      return;
+    }
+    try {
+      const { data } = await axios.get(`${API}/locations/${locationId}/bins`);
+      setBinOptions(data);
     } catch (e) {
       console.error(e);
     }
@@ -57,6 +88,11 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
     });
     setError('');
     setSuccess('');
+    setDeleteProductId('');
+    setDeleteLocationId('');
+    setDeleteBinLocationId('');
+    setDeleteBinId('');
+    setBinOptions([]);
   };
 
   const handleAddProduct = async (e) => {
@@ -125,12 +161,74 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
     }
   };
 
+  const handleDeleteProduct = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+    if (!deleteProductId) {
+      setError('Please select a product to delete.');
+      return;
+    }
+    try {
+      await axios.delete(`${API}/admin/products/${deleteProductId}`);
+      setSuccess('Product deleted successfully!');
+      setDeleteProductId('');
+      await loadProducts();
+      if (onUpdate) onUpdate();
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to delete product');
+    }
+  };
+
+  const handleDeleteLocation = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+    if (!deleteLocationId) {
+      setError('Please select a location to delete.');
+      return;
+    }
+    try {
+      await axios.delete(`${API}/admin/locations/${deleteLocationId}`);
+      setSuccess('Location deleted successfully!');
+      setDeleteLocationId('');
+      await loadLocations();
+      if (onUpdate) onUpdate();
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to delete location');
+    }
+  };
+
+  const handleDeleteBin = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+    if (!deleteBinId) {
+      setError('Please select a bin to delete.');
+      return;
+    }
+    try {
+      await axios.delete(`${API}/admin/bins/${deleteBinId}`);
+      setSuccess('Bin deleted successfully!');
+      setDeleteBinId('');
+      await loadBinsForLocation(deleteBinLocationId);
+      if (onUpdate) onUpdate();
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to delete bin');
+    }
+  };
+
   const tabs = [
     { id: 'products', label: 'Add Product', icon: '📦' },
     { id: 'locations', label: 'Add Location', icon: '🏢' },
     { id: 'bins', label: 'Add Bin', icon: '📍' }
   ];
 
+  const removeTabs = [
+    { id: 'remove-product', label: 'Remove Product' },
+    { id: 'remove-location', label: 'Remove Location' },
+    { id: 'remove-bin', label: 'Remove Bin' }
+  ];
   return (
     <div style={{
       position: 'fixed',
@@ -181,13 +279,12 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
           </button>
         </div>
 
-        {/* Tabs */}
+        {/* Tabs - Add */}
         <div style={{
           display: 'flex',
           gap: '8px',
-          padding: '16px 24px',
-          background: '#202634',
-          borderBottom: '1px solid #3d4559'
+          padding: '16px 24px 8px 24px',
+          background: '#202634'
         }}>
           {tabs.map(tab => (
             <button
@@ -211,6 +308,39 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
               }}
             >
               {tab.icon} {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Tabs - Remove */}
+        <div style={{
+          display: 'flex',
+          gap: '8px',
+          padding: '0 24px 16px 24px',
+          background: '#202634',
+          borderBottom: '1px solid #3d4559'
+        }}>
+          {removeTabs.map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => {
+                setActiveTab(tab.id);
+                resetForm();
+              }}
+              style={{
+                flex: 1,
+                padding: '12px',
+                border: '1px solid #5a2f2f',
+                borderRadius: '6px',
+                background: activeTab === tab.id ? '#3a1f1f' : 'transparent',
+                color: '#fca5a5',
+                cursor: 'pointer',
+                fontWeight: '600',
+                fontSize: '14px',
+                transition: 'all 0.2s'
+              }}
+            >
+              {tab.label}
             </button>
           ))}
         </div>
@@ -244,7 +374,6 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
               {success}
             </div>
           )}
-
           {/* Add product */}
           {activeTab === 'products' && (
             <form onSubmit={handleAddProduct}>
@@ -603,6 +732,227 @@ export default function AdminPanel({ user, onClose, onUpdate }) {
                 }}
               >
                 {loading ? 'Adding...' : 'Add Bin'}
+              </button>
+            </form>
+          )}
+          {/* Remove product */}
+          {activeTab === 'remove-product' && (
+            <form onSubmit={handleDeleteProduct}>
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{
+                  display: 'block',
+                  color: '#c5cdd8',
+                  fontSize: '12px',
+                  fontWeight: '500',
+                  marginBottom: '8px'
+                }}>
+                  Select Product to Remove
+                </label>
+                <select
+                  name="deleteProductId"
+                  value={deleteProductId}
+                  onChange={e => setDeleteProductId(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '12px 16px',
+                    background: '#202634',
+                    border: '1px solid #3d4559',
+                    borderRadius: '6px',
+                    color: '#f0f4f8',
+                    fontSize: '15px',
+                    outline: 'none',
+                    cursor: 'pointer',
+                    boxSizing: 'border-box',
+                    marginBottom: '16px'
+                  }}
+                >
+                  <option value="">Select a product...</option>
+                  {products.map(prod => (
+                    <option key={prod.id} value={prod.id}>
+                      {prod.sku} — {prod.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <button
+                type="submit"
+                style={{
+                  width: '100%',
+                  padding: '14px',
+                  background: '#3a1f1f',
+                  color: '#fca5a5',
+                  border: '1px solid #5a2f2f',
+                  borderRadius: '6px',
+                  fontSize: '16px',
+                  fontWeight: '600',
+                  cursor: 'pointer'
+                }}
+              >
+                Delete Product
+              </button>
+            </form>
+          )}
+
+          {/* Remove location */}
+          {activeTab === 'remove-location' && (
+            <form onSubmit={handleDeleteLocation}>
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{
+                  display: 'block',
+                  color: '#c5cdd8',
+                  fontSize: '12px',
+                  fontWeight: '500',
+                  marginBottom: '8px'
+                }}>
+                  Select Location to Remove
+                </label>
+                <select
+                  name="deleteLocationId"
+                  value={deleteLocationId}
+                  onChange={e => setDeleteLocationId(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '12px 16px',
+                    background: '#202634',
+                    border: '1px solid #3d4559',
+                    borderRadius: '6px',
+                    color: '#f0f4f8',
+                    fontSize: '15px',
+                    outline: 'none',
+                    cursor: 'pointer',
+                    boxSizing: 'border-box',
+                    marginBottom: '16px'
+                  }}
+                >
+                  <option value="">Select a location...</option>
+                  {locations.map(loc => (
+                    <option key={loc.id} value={loc.id}>
+                      {loc.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <button
+                type="submit"
+                style={{
+                  width: '100%',
+                  padding: '14px',
+                  background: '#3a1f1f',
+                  color: '#fca5a5',
+                  border: '1px solid #5a2f2f',
+                  borderRadius: '6px',
+                  fontSize: '16px',
+                  fontWeight: '600',
+                  cursor: 'pointer'
+                }}
+              >
+                Delete Location
+              </button>
+            </form>
+          )}
+
+          {/* Remove bin */}
+          {activeTab === 'remove-bin' && (
+            <form onSubmit={handleDeleteBin}>
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{
+                  display: 'block',
+                  color: '#c5cdd8',
+                  fontSize: '12px',
+                  fontWeight: '500',
+                  marginBottom: '8px'
+                }}>
+                  Select Location
+                </label>
+                <select
+                  name="deleteBinLocationId"
+                  value={deleteBinLocationId}
+                  onChange={e => {
+                    const val = e.target.value;
+                    setDeleteBinLocationId(val);
+                    loadBinsForLocation(val);
+                    setDeleteBinId('');
+                  }}
+                  style={{
+                    width: '100%',
+                    padding: '12px 16px',
+                    background: '#202634',
+                    border: '1px solid #3d4559',
+                    borderRadius: '6px',
+                    color: '#f0f4f8',
+                    fontSize: '15px',
+                    outline: 'none',
+                    cursor: 'pointer',
+                    boxSizing: 'border-box',
+                    marginBottom: '16px'
+                  }}
+                >
+                  <option value="">Select a location...</option>
+                  {locations.map(loc => (
+                    <option key={loc.id} value={loc.id}>
+                      {loc.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div style={{ marginBottom: '24px' }}>
+                <label style={{
+                  display: 'block',
+                  color: '#c5cdd8',
+                  fontSize: '12px',
+                  fontWeight: '500',
+                  marginBottom: '8px'
+                }}>
+                  Select Bin to Remove
+                </label>
+                <select
+                  name="deleteBinId"
+                  value={deleteBinId}
+                  onChange={e => setDeleteBinId(e.target.value)}
+                  disabled={!deleteBinLocationId}
+                  style={{
+                    width: '100%',
+                    padding: '12px 16px',
+                    background: '#202634',
+                    border: '1px solid #3d4559',
+                    borderRadius: '6px',
+                    color: '#f0f4f8',
+                    fontSize: '15px',
+                    outline: 'none',
+                    cursor: !deleteBinLocationId ? 'not-allowed' : 'pointer',
+                    boxSizing: 'border-box'
+                  }}
+                >
+                  <option value="">
+                    {deleteBinLocationId ? 'Select a bin...' : 'Select a location first'}
+                  </option>
+                  {binOptions.map(bin => (
+                    <option key={bin.id} value={bin.id}>
+                      {bin.code}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <button
+                type="submit"
+                disabled={!deleteBinId}
+                style={{
+                  width: '100%',
+                  padding: '14px',
+                  background: !deleteBinId ? '#5a6578' : '#3a1f1f',
+                  color: '#fca5a5',
+                  border: '1px solid #5a2f2f',
+                  borderRadius: '6px',
+                  fontSize: '16px',
+                  fontWeight: '600',
+                  cursor: !deleteBinId ? 'not-allowed' : 'pointer'
+                }}
+              >
+                Delete Bin
               </button>
             </form>
           )}

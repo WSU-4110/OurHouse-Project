@@ -182,7 +182,7 @@ app.patch(
   })
 );
 
-// DELETE product
+// DELETE product (BLOCK if stock exists)
 app.delete(
   '/admin/products/:id',
   authRequired,
@@ -194,6 +194,7 @@ app.delete(
     try {
       await client.query('BEGIN');
 
+      // Check product exists
       const { rows: product } = await client.query(
         'SELECT * FROM products WHERE id = $1',
         [id]
@@ -203,15 +204,33 @@ app.delete(
         return res.status(404).json({ error: 'Product not found' });
       }
 
-      // Delete related stock levels first
-      await client.query('DELETE FROM stock_levels WHERE product_id = $1', [
-        id,
-      ]);
+      // Check if stock exists
+      const { rows: stockRows } = await client.query(
+        `SELECT SUM(qty) AS total_qty
+         FROM stock_levels
+         WHERE product_id = $1`,
+        [id]
+      );
 
-      // Delete the product
+      const totalQty = stockRows[0].total_qty;
+
+      if (totalQty !== null && Number(totalQty) > 0) {
+        await client.query('ROLLBACK');
+        return res.status(400).json({
+          error: `Cannot delete product — ${totalQty} units still exist in stock.`,
+        });
+      }
+
+      // Safe delete: remove zero-qty stock rows first
+      await client.query(
+        'DELETE FROM stock_levels WHERE product_id = $1',
+        [id]
+      );
+
+      // Delete the product itself
       await client.query('DELETE FROM products WHERE id = $1', [id]);
 
-      // Log the action
+      // Log action
       await client.query(
         `INSERT INTO activity_logs(action_type, user_name, user_role, details)
          VALUES ($1, $2, $3, $4)`,
@@ -225,6 +244,7 @@ app.delete(
 
       await client.query('COMMIT');
       res.json({ ok: true, message: 'Product deleted successfully' });
+
     } catch (e) {
       await client.query('ROLLBACK');
       throw e;
@@ -233,6 +253,7 @@ app.delete(
     }
   })
 );
+
 
 // ============================================
 // LOCATIONS ENDPOINTS
